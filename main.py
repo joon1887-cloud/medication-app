@@ -444,10 +444,14 @@ def get_weekly():
     for i in range(6, -1, -1):
         day = today - timedelta(days=i)
         day_str = day.isoformat()
-        total = conn.execute("SELECT COUNT(*) FROM prescription_drugs").fetchone()[0]
-        taken = conn.execute(
-            "SELECT COUNT(*) FROM medication_logs WHERE taken_date = ? AND is_taken = 1", (day_str,)
-        ).fetchone()[0]
+        # 슬롯 기준 total 계산 (frequency 합산)
+        drugs = conn.execute("SELECT frequency FROM prescription_drugs").fetchall()
+        freq_map = {'하루 1회': 1, '하루 2회': 2, '하루 3회': 3, '하루 4회': 4}
+        total = sum(freq_map.get(d['frequency'], 1) for d in drugs)        
+        taken = conn.execute("""
+    SELECT COUNT(*) FROM medication_logs 
+    WHERE taken_date = ? AND is_taken = 1
+""", (day_str,)).fetchone()[0]
         result.append({
             "date": day_str,
             "weekday": ["일", "월", "화", "수", "목", "금", "토"][day.weekday() % 7 if day.weekday() != 6 else 0],

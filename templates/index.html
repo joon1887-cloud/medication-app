@@ -621,23 +621,57 @@ function closeExpertView() {
             document.getElementById('doseDone').textContent = done;
             document.getElementById('doseTotal').textContent = total;
 
-            const listEl = document.getElementById('todayList');
-            listEl.innerHTML = drugs.length === 0
+            // 약별 색깔 지정
+const drugColors = ['#7C6FF0','#2E86DE','#1D9E75','#D85A30','#D4537E','#BA7517','#639922','#E24B4A'];
+const drugColorMap = {};
+let colorIdx = 0;
+drugs.forEach(d => {
+    if (!drugColorMap[d.id]) {
+        drugColorMap[d.id] = drugColors[colorIdx % drugColors.length];
+        colorIdx++;
+    }
+});
+
+// 약 기준으로 그룹핑
+const drugGroups = {};
+drugs.forEach(d => {
+    if (!drugGroups[d.id]) drugGroups[d.id] = { ...d, slots: [] };
+    drugGroups[d.id].slots.push({ slot: d.slot, is_taken: d.is_taken });
+});
+
+const listEl = document.getElementById('todayList');
+const groupList = Object.values(drugGroups);
+listEl.innerHTML = groupList.length === 0
     ? '<div class="dash-empty">오늘 복용할 약이 없어요</div>'
-    : drugs.map(d => `
-        <div class="check-item">
-            <div class="check-box ${d.is_taken ? 'checked' : ''}" 
-                onclick="toggleCheck(${d.id}, this, '${d.slot}')">${d.is_taken ? '✓' : ''}</div>
-            <div class="check-info">
-                <p>${d.drug_name}</p>
-                <p>${d.hospital} · ${d.dosage}</p>
+    : groupList.map(d => {
+        const color = drugColorMap[d.id];
+        const doneCount = d.slots.filter(s => s.is_taken).length;
+        const totalCount = d.slots.length;
+        return `
+            <div class="check-item">
+                <div style="width:4px;height:32px;border-radius:2px;background:${color};flex-shrink:0;"></div>
+                <div class="check-info" style="flex:1;">
+                    <p>${d.drug_name} <span style="font-size:11px;color:#7a94a8;font-weight:400;">${doneCount}/${totalCount}</span></p>
+                    <p>${d.hospital} · ${d.dosage}</p>
+                </div>
+                <div style="display:flex;gap:4px;">
+                    ${d.slots.map(s => `
+                        <div onclick="toggleCheck(${d.id}, this, '${s.slot}')" 
+                            style="width:32px;height:32px;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:9px;font-weight:500;border:1.5px solid ${s.is_taken ? color : '#DAEAF8'};background:${s.is_taken ? color : 'white'};color:${s.is_taken ? 'white' : '#aaa'};">
+                            <span>${s.slot.length > 2 ? s.slot.substring(0,2) : s.slot}</span>
+                            ${s.is_taken ? '<span style="font-size:10px;">✓</span>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
             </div>
-            <span class="check-time-badge">${d.slot}</span>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
             const today = new Date();
-            const refillSoon = drugs.filter(d => {
+            const uniqueDrugs = drugs.filter((d, idx, arr) => 
+                arr.findIndex(x => x.id === d.id) === idx
+            );
+            const refillSoon = uniqueDrugs.filter(d => {
                 if (!d.refill_date) return false;
                 const diff = Math.ceil((new Date(d.refill_date) - today) / (1000*60*60*24));
                 return diff <= 7 && diff >= 0;
@@ -659,8 +693,8 @@ function closeExpertView() {
                     `;
                 }).join('');
 
-            document.getElementById('statPrescriptions').textContent = new Set(drugs.map(d => d.prescription_id)).size;
-            document.getElementById('statDrugs').textContent = total;
+            document.getElementById('statPrescriptions').textContent = new Set(uniqueDrugs.map(d => d.prescription_id)).size;
+            document.getElementById('statDrugs').textContent = uniqueDrugs.length;
 
             // 주간 차트
             const weekData = await (await fetch('/weekly')).json();
@@ -706,18 +740,14 @@ function closeExpertView() {
                 `<div style="position:absolute;top:0;bottom:0;left:${currentPct}%;width:2px;background:#2E86DE;z-index:10;">
                     <div style="position:absolute;top:-4px;left:-4px;width:10px;height:10px;background:#2E86DE;border-radius:50%;"></div>
                 </div>` +
-                drugs.map(d => {
-                    const hour = slotToHour(d.slot);;
+                drugs.map((d, i) => {
+                    const hour = slotToHour(d.slot);
                     const pct = (hour / 24) * 100;
-                    const isPast = now.getHours() >= hour;
-                    const color = d.is_taken ? '#7C6FF0' : isPast ? '#FFB3B3' : '#DAEAF8';
-                    const textColor = d.is_taken || isPast ? 'white' : '#7a94a8';
-                    const label = d.is_taken ? '✓ 복용' : isPast ? '미복용' : `${hour}시`;
+                    const color = drugColorMap[d.id] || '#7C6FF0';
+                    const bgColor = d.is_taken ? color : '#E8E8E8';
+                    const sameSlot = drugs.filter((x, j) => j < i && slotToHour(x.slot) === hour).length;
                     return `
-                        <div style="position:absolute;left:calc(${pct}% - 40px);top:8px;background:${color};border-radius:8px;padding:4px 8px;font-size:10px;color:${textColor};white-space:nowrap;z-index:5;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
-                            <div style="font-weight:600;">${d.drug_name.length > 6 ? d.drug_name.substring(0,6)+'...' : d.drug_name}</div>
-                            <div style="opacity:0.85;">${label}</div>
-                        </div>`;
+                        <div style="position:absolute;left:calc(${pct}% + ${sameSlot * 10}px);top:4px;bottom:4px;width:6px;border-radius:3px;background:${bgColor};z-index:5;" title="${d.drug_name} ${d.slot}${d.is_taken ? ' ✓' : ''}"></div>`;
                 }).join('');
         }
 
