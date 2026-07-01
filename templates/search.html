@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>약 검색</title>
+  <style>
+    /* ── 기존 앱과 동일한 보라 테마 ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif; background: #f4f3ff; min-height: 100vh; }
+
+    /* 네비게이션 (index.html과 동일하게 맞춰주세요) */
+    .nav { background: #fff; border-bottom: 1px solid #e8e6ff; padding: 0 24px; display: flex; align-items: center; gap: 8px; height: 56px; }
+    .nav-logo { font-weight: 700; font-size: 18px; color: #6c47ff; text-decoration: none; }
+    .nav-links { display: flex; gap: 4px; margin-left: 24px; }
+    .nav-links a { padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; color: #666; transition: background .15s; }
+    .nav-links a:hover { background: #f0eeff; color: #6c47ff; }
+    .nav-links a.active { background: #6c47ff; color: #fff; font-weight: 600; }
+
+    /* 검색 헤더 카드 */
+    .search-header { background: linear-gradient(135deg, #6c47ff 0%, #a259ff 100%); color: #fff; padding: 40px 24px 32px; }
+    .search-header h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+    .search-header p { font-size: 14px; opacity: .85; margin-bottom: 24px; }
+    .search-bar { display: flex; gap: 10px; max-width: 560px; }
+    .search-bar input {
+      flex: 1; padding: 12px 16px; border-radius: 12px; border: none;
+      font-size: 15px; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    }
+    .search-bar button {
+      padding: 12px 22px; background: #fff; color: #6c47ff; border: none;
+      border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15); transition: opacity .15s;
+    }
+    .search-bar button:hover { opacity: .85; }
+
+    /* 뷰 토글 */
+    .view-toggle { display: flex; gap: 8px; padding: 16px 24px 0; }
+    .view-btn { padding: 7px 18px; border-radius: 20px; border: 2px solid #d4ccff; background: #fff; color: #6c47ff; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; }
+    .view-btn.active { background: #6c47ff; color: #fff; border-color: #6c47ff; }
+
+    /* 결과 영역 */
+    .results { padding: 16px 24px 40px; max-width: 860px; display: flex; flex-direction: column; gap: 16px; }
+
+    .result-card {
+      background: #fff; border-radius: 16px; padding: 20px 24px;
+      box-shadow: 0 2px 12px rgba(108,71,255,.08); border: 1px solid #ede9ff;
+    }
+    .drug-name { font-size: 18px; font-weight: 700; color: #2d2d2d; margin-bottom: 4px; }
+    .ingredient-badge {
+      display: inline-block; background: #f0eeff; color: #6c47ff;
+      font-size: 12px; padding: 3px 10px; border-radius: 20px; margin-bottom: 14px; font-weight: 600;
+    }
+
+    .info-section { margin-bottom: 12px; }
+    .info-label {
+      font-size: 12px; font-weight: 700; color: #9b8ec4; text-transform: uppercase;
+      letter-spacing: .05em; margin-bottom: 4px;
+    }
+    .info-text { font-size: 14px; color: #444; line-height: 1.6; }
+
+    /* 일반인 뷰에서 숨길 항목 */
+    .expert-only { display: none; }
+    body.expert-view .expert-only { display: block; }
+    body.expert-view .layman-only { display: none; }
+
+    /* 로딩 / 빈 상태 */
+    .state-msg { text-align: center; padding: 60px 24px; color: #aaa; font-size: 15px; }
+    .state-msg .icon { font-size: 40px; margin-bottom: 12px; }
+
+    /* 로딩 스피너 */
+    .spinner { width: 36px; height: 36px; border: 3px solid #ede9ff; border-top-color: #6c47ff; border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* 구분선 */
+    .divider { border: none; border-top: 1px solid #f0eeff; margin: 12px 0; }
+
+    /* 접기/펼치기 */
+    .toggle-detail { background: none; border: 1px solid #d4ccff; color: #6c47ff; font-size: 12px; border-radius: 8px; padding: 4px 12px; cursor: pointer; margin-top: 8px; }
+    .toggle-detail:hover { background: #f0eeff; }
+    .detail-body { display: none; margin-top: 12px; }
+    .detail-body.open { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- 네비게이션 (index.html과 동일하게 유지) -->
+  <nav class="nav">
+    <a class="nav-logo" href="/">💊 약 관리</a>
+    <div class="nav-links">
+      <a href="/">대시보드</a>
+      <a href="/cabinet">약장</a>
+      <a href="/search-page" class="active">약 검색</a>
+    </div>
+  </nav>
+
+  <!-- 검색 헤더 -->
+  <div class="search-header">
+    <h1>🔍 약 검색</h1>
+    <p>약 이름으로 효능, 복용법, 부작용을 확인하세요</p>
+    <div class="search-bar">
+      <input id="searchInput" type="text" placeholder="약 이름을 입력하세요 (예: 타이레놀)" />
+      <button onclick="doSearch()">검색</button>
+    </div>
+  </div>
+
+  <!-- 뷰 토글 -->
+  <div class="view-toggle">
+    <button class="view-btn active" id="btn-layman" onclick="setView('layman')">일반인 뷰</button>
+    <button class="view-btn" id="btn-expert" onclick="setView('expert')">전문가 뷰</button>
+  </div>
+
+  <!-- 결과 -->
+  <div class="results" id="results">
+    <div class="state-msg">
+      <div class="icon">💊</div>
+      <div>약 이름을 검색해보세요</div>
+    </div>
+  </div>
+
+  <script>
+    let currentView = 'layman';
+
+    function setView(v) {
+      currentView = v;
+      document.body.classList.toggle('expert-view', v === 'expert');
+      document.getElementById('btn-layman').classList.toggle('active', v === 'layman');
+      document.getElementById('btn-expert').classList.toggle('active', v === 'expert');
+    }
+
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doSearch();
+    });
+
+    async function doSearch() {
+      const name = document.getElementById('searchInput').value.trim();
+      if (!name) return;
+
+      const container = document.getElementById('results');
+      container.innerHTML = `<div class="state-msg"><div class="spinner"></div><div>검색 중...</div></div>`;
+
+      try {
+        const res = await fetch(`/drug-info?name=${encodeURIComponent(name)}`);
+        const drugs = await res.json();
+
+        if (!drugs || drugs.length === 0) {
+          container.innerHTML = `<div class="state-msg"><div class="icon">🔎</div><div>검색 결과가 없습니다<br><small style="color:#bbb">"${name}"에 해당하는 약을 찾지 못했어요</small></div></div>`;
+          return;
+        }
+
+        container.innerHTML = drugs.map((d, i) => renderCard(d, i)).join('');
+      } catch (e) {
+        container.innerHTML = `<div class="state-msg"><div class="icon">⚠️</div><div>검색 중 오류가 발생했어요</div></div>`;
+      }
+    }
+
+    function renderCard(d, idx) {
+      const ingredient = d.ingredient
+        ? `<span class="ingredient-badge">성분: ${d.ingredient}</span>`
+        : '';
+
+      // 일반인 뷰: 효능 + 복용법 (쉬운 말로)
+      // 전문가 뷰: 성분명 + 주의사항 + 부작용 + 상호작용 + 보관법 추가
+      const laymanSection = `
+        <div class="info-section layman-only">
+          <div class="info-label">효능</div>
+          <div class="info-text">${d.efficacy || '정보 없음'}</div>
+        </div>
+        <hr class="divider layman-only">
+        <div class="info-section layman-only">
+          <div class="info-label">복용 방법</div>
+          <div class="info-text">${d.usage || '정보 없음'}</div>
+        </div>
+      `;
+
+      const expertSection = `
+        <div class="info-section expert-only">
+          <div class="info-label">효능</div>
+          <div class="info-text">${d.efficacy || '정보 없음'}</div>
+        </div>
+        <hr class="divider expert-only">
+        <div class="info-section expert-only">
+          <div class="info-label">복용 방법</div>
+          <div class="info-text">${d.usage || '정보 없음'}</div>
+        </div>
+        <hr class="divider expert-only">
+        <div class="info-section expert-only">
+          <div class="info-label">⚠️ 주의사항</div>
+          <div class="info-text">${d.caution || '정보 없음'}</div>
+        </div>
+        <hr class="divider expert-only">
+        <div class="info-section expert-only">
+          <div class="info-label">부작용</div>
+          <div class="info-text">${d.side_effect || '정보 없음'}</div>
+        </div>
+        <hr class="divider expert-only">
+        <div class="info-section expert-only">
+          <div class="info-label">약물 상호작용</div>
+          <div class="info-text">${d.interaction || '정보 없음'}</div>
+        </div>
+        <hr class="divider expert-only">
+        <div class="info-section expert-only">
+          <div class="info-label">보관 방법</div>
+          <div class="info-text">${d.storage || '정보 없음'}</div>
+        </div>
+      `;
+
+      return `
+        <div class="result-card">
+          <div class="drug-name">${d.name}</div>
+          ${ingredient}
+          ${laymanSection}
+          ${expertSection}
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

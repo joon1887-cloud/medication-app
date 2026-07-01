@@ -12,6 +12,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, sans-serif; background: #F5F5F7; min-height: 100vh; display: flex; }
 
+        /* ── 사이드바 ── */
         .sidebar { width: 200px; min-height: 100vh; background: white; border-right: 1px solid #DAEAF8; padding: 24px 16px; display: flex; flex-direction: column; gap: 4px; position: fixed; top: 0; left: 0; }
         .sidebar .logo { display: flex; align-items: center; gap: 8px; margin-bottom: 28px; padding: 0 8px; }
         .sidebar .logo-icon { width: 28px; height: 28px; background: #2E86DE; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
@@ -22,6 +23,7 @@
         .sidebar .menu-item.active { background: #EBF5FF; color: #2E86DE; font-weight: 500; }
         .sidebar .menu-item i { font-size: 16px; }
 
+        /* ── 메인 ── */
         .main { margin-left: 200px; flex: 1; padding: 32px; }
         .page { display: none; }
         .page.active { display: block; }
@@ -40,27 +42,21 @@
         .dash-title { font-size: 22px; font-weight: 600; color: #1a2a3a; margin: 0 0 24px; }
         .dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
         .dash-card { background: white; border-radius: 16px; border: 1px solid #EEF2F6; padding: 20px; box-shadow: 0 4px 16px rgba(46,134,222,0.06); }
-        /* 메인 카드 보라 그라데이션 */
-.dash-card-main {
-    background: linear-gradient(135deg, #7C6FF0 0%, #A78BFA 100%);
-    border: none;
-}
-.dash-card-main h3,
-.dash-main-label { font-size: 13px; color: rgba(255,255,255,0.85); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-.dash-main-count { font-size: 48px; font-weight: 700; color: white; line-height: 1; margin-bottom: 16px; }
-.dash-main-total { font-size: 18px; font-weight: 400; color: rgba(255,255,255,0.7); }
-.dash-card-main .progress-bar-bg { background: rgba(255,255,255,0.25); }
-.dash-card-main .progress-bar-fill { background: white; }
-.dash-card-main .progress-text { color: rgba(255,255,255,0.7); }
-.dash-card-main .check-item { border-bottom-color: rgba(255,255,255,0.15); }
-.dash-card-main .check-box { border-color: rgba(255,255,255,0.5); }
-.dash-card-main .check-box.checked { background: white; border-color: white; color: #7C6FF0; }
-.dash-card-main .check-info p:first-child { color: white; }
-.dash-card-main .check-info p:last-child { color: rgba(255,255,255,0.7); }
-.dash-card-main .check-time-badge { background: rgba(255,255,255,0.2); color: white; }
-.dash-card-main .dash-empty { color: rgba(255,255,255,0.7); }
+        .dash-card-main { background: linear-gradient(135deg, #7C6FF0 0%, #A78BFA 100%); border: none; }
+        .dash-card-main h3, .dash-main-label { font-size: 13px; color: rgba(255,255,255,0.85); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .dash-main-count { font-size: 48px; font-weight: 700; color: white; line-height: 1; margin-bottom: 16px; }
+        .dash-main-total { font-size: 18px; font-weight: 400; color: rgba(255,255,255,0.7); }
+        .dash-card-main .progress-bar-bg { background: rgba(255,255,255,0.25); }
+        .dash-card-main .progress-bar-fill { background: white; }
+        .dash-card-main .progress-text { color: rgba(255,255,255,0.7); }
+        .dash-card-main .check-item { border-bottom-color: rgba(255,255,255,0.15); }
+        .dash-card-main .check-box { border-color: rgba(255,255,255,0.5); }
+        .dash-card-main .check-box.checked { background: white; border-color: white; color: #7C6FF0; }
+        .dash-card-main .check-info p:first-child { color: white; }
+        .dash-card-main .check-info p:last-child { color: rgba(255,255,255,0.7); }
+        .dash-card-main .check-time-badge { background: rgba(255,255,255,0.2); color: white; }
+        .dash-card-main .dash-empty { color: rgba(255,255,255,0.7); }
         .dash-card h3 { font-size: 14px; font-weight: 600; color: #1a2a3a; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
-
         .progress-bar-bg { background: #EEF6FF; border-radius: 8px; height: 8px; margin-bottom: 4px; overflow: hidden; }
         .progress-bar-fill { background: #2E86DE; height: 100%; border-radius: 8px; transition: width 0.3s; }
         .progress-text { font-size: 12px; color: #7a94a8; margin-bottom: 16px; }
@@ -72,22 +68,18 @@
         .check-info p:first-child { font-size: 13px; color: #1a2a3a; font-weight: 500; }
         .check-info p:last-child { font-size: 11px; color: #7a94a8; margin-top: 2px; }
         .check-time-badge { font-size: 11px; background: #EBF5FF; color: #2E86DE; padding: 3px 8px; border-radius: 6px; }
-
         .refill-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #F0F7FF; }
         .refill-item:last-child { border-bottom: none; }
         .refill-item-name { font-size: 13px; color: #1a2a3a; font-weight: 500; }
         .refill-item-date { font-size: 11px; color: #7a94a8; margin-top: 2px; }
         .refill-dday { font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; background: #FFF0E0; color: #c05600; }
-
         .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
         .stat-label { font-size: 13px; color: #7a94a8; }
         .stat-value { font-size: 18px; font-weight: 600; color: #2E86DE; }
-
         .dash-empty { text-align: center; color: #aaa; padding: 20px 0; font-size: 13px; }
 
-        /* ── 처방전 카드 (표 모드) ── */
+        /* ── 처방전 카드 ── */
         .prescription-card { background: white; border-radius: 16px; border: 1px solid #EEF2F6; margin-bottom: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(46,134,222,0.06); }
-
         .prescription-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: #F8FBFF; border-bottom: 1px solid #DAEAF8; }
         .prescription-header-left { display: flex; align-items: center; gap: 12px; }
         .prescription-icon { width: 36px; height: 36px; background: #2E86DE; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
@@ -98,7 +90,6 @@
         .refill-badge { display: inline-block; padding: 4px 10px; background: #FFF0E0; color: #c05600; border-radius: 20px; font-size: 11px; font-weight: 500; }
         .edit-btn { border: none; background: #EBF5FF; color: #2E86DE; cursor: pointer; font-size: 12px; padding: 4px 10px; border-radius: 6px; }
         .delete-btn { border: none; background: none; color: #ccc; cursor: pointer; font-size: 16px; }
-
         .drug-table { width: 100%; border-collapse: collapse; font-size: 12px; }
         .drug-table th { padding: 8px 20px; text-align: left; font-weight: 500; color: #7a94a8; background: #F8FBFF; border-bottom: 1px solid #EEF6FF; }
         .drug-table td { padding: 11px 20px; color: #4a6580; border-bottom: 1px solid #EEF6FF; }
@@ -109,7 +100,6 @@
         /* ── 약 카드 (카드 모드) ── */
         .drug-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
         .drug-card { background: white; border-radius: 16px; border: 1px solid #EEF2F6; padding: 18px; box-shadow: 0 4px 16px rgba(46,134,222,0.06); }
-
         .drug-card-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
         .drug-card-icon { width: 38px; height: 38px; background: #EBF5FF; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .drug-card-icon i { font-size: 18px; color: #2E86DE; }
@@ -119,29 +109,23 @@
         .drug-card-status.urgent { background: #FFF0E0; color: #c05600; }
         .drug-card-meta { display: flex; gap: 14px; font-size: 11px; color: #7a94a8; margin-bottom: 12px; }
         .drug-card-meta b { color: #1a2a3a; font-weight: 500; }
-        .drug-card-progress-label { display: flex; justify-content: space-between; font-size: 11px; color: #7a94a8; margin-bottom: 6px; }
         .drug-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid #F0F7FF; font-size: 11px; color: #7a94a8; }
         .drug-card-footer .actions { display: flex; gap: 6px; }
         .drug-card-footer .actions button { border: none; background: none; cursor: pointer; font-size: 12px; color: #2E86DE; }
         .drug-card-footer .actions button.del { color: #ccc; }
 
         /* ── 폼 모달 ── */
-        .form-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 100; justify-content: center; align-items: flex-start; padding-top: 40px; overflow-y: auto; }
+        .form-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; justify-content: center; align-items: center; padding: 24px; overflow-y: auto; }
         .form-overlay.open { display: flex; }
-        .form-box { background: white; border-radius: 16px; padding: 28px; width: 100%; max-width: 1000px; margin-bottom: 40px; border: 1px solid #DAEAF8; }
+        .form-box { background: white; border-radius: 20px; padding: 40px 48px; width: 95%; max-width: 1400px; max-height: 92vh; overflow-y: auto; border: 1px solid #DAEAF8; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
         .form-box h2 { font-size: 18px; font-weight: 600; color: #1a2a3a; margin-bottom: 20px; }
-        .form-box label { font-size: 12px; color: #7a94a8; margin-bottom: 4px; margin-top: 12px; display: block; }
-        .form-box input[type="text"] { width: 100%; padding: 10px; border: 1px solid #DAEAF8; border-radius: 8px; font-size: 14px; color: #1a2a3a; }
-        .form-box .flatpickr-input { width: 100%; padding: 10px; border: 1px solid #DAEAF8; border-radius: 8px; font-size: 14px; cursor: pointer; background: white; color: #1a2a3a; }
         .section-title { font-size: 11px; font-weight: 500; color: #7a94a8; letter-spacing: 0.5px; margin: 20px 0 12px; }
-        .save-btn { width: 100%; padding: 12px; background: #2E86DE; color: white; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; margin-top: 20px; font-weight: 500; position: relative; z-index: 10; }
+        .save-btn { width: 100%; padding: 12px; background: #2E86DE; color: white; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; margin-top: 20px; font-weight: 500; }
         .drug-input-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .drug-input-table th { padding: 8px 6px; text-align: left; font-weight: 500; color: #7a94a8; border-bottom: 1px solid #EEF6FF; font-size: 12px; }
-        .drug-input-table td { padding: 6px 4px; border-bottom: 1px solid #F0F7FF; vertical-align: top; }
-        .drug-input-table input, .drug-input-table select { width: 100%; padding: 7px 8px; border: 1px solid #DAEAF8; border-radius: 6px; font-size: 12px; color: #1a2a3a; }
-        .dosage-cell { display: flex; gap: 4px; }
-        .dosage-cell input { flex: 1; }
-        .dosage-cell select { width: 70px; flex-shrink: 0; }
+        .drug-input-table th { padding: 12px 10px; text-align: left; font-weight: 600; color: #7a94a8; border-bottom: 2px solid #EEF6FF; font-size: 12px; letter-spacing: 0.3px; white-space: nowrap; }
+        .drug-input-table td { padding: 10px 8px; border-bottom: 1px solid #F0F7FF; vertical-align: middle; }
+        .drug-input-table input, .drug-input-table select { width: 100%; padding: 10px 12px; border: 1px solid #DAEAF8; border-radius: 8px; font-size: 14px; color: #1a2a3a; }
+        .drug-input-table input:focus, .drug-input-table select:focus { outline: none; border-color: #2E86DE; box-shadow: 0 0 0 3px rgba(46,134,222,0.1); }
         .custom-cell { position: relative; }
         .custom-cell .back-btn { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); border: none; background: none; color: #aaa; cursor: pointer; font-size: 11px; }
         .custom-cell input { padding-right: 20px; }
@@ -150,6 +134,8 @@
 
         .coming-soon { text-align: center; color: #7a94a8; padding: 80px 0; font-size: 16px; }
         .empty { text-align: center; color: #7a94a8; padding: 60px 0; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         @media (max-width: 768px) {
             .sidebar { display: none; }
@@ -193,7 +179,7 @@
                     <p class="progress-text" id="progressText">0 / 0 완료</p>
                     <div id="todayList"></div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display:flex; flex-direction:column; gap:16px;">
                     <div class="dash-card">
                         <h3><i class="ti ti-bell" style="color:#c05600;"></i> 재처방 임박</h3>
                         <div id="refillList"></div>
@@ -204,21 +190,33 @@
                         <div class="stat-row"><span class="stat-label">등록된 약</span><span class="stat-value" id="statDrugs">0</span></div>
                     </div>
                 </div>
-                <!-- 주간 복약 순응도 -->
-                <div class="dash-card" style="margin-top: 16px;">
+                <div class="dash-card" style="margin-top:16px;">
                     <h3><i class="ti ti-chart-bar" style="color:#7C6FF0;"></i> 주간 복약 순응도</h3>
                     <div id="weeklyChart" style="display:flex; align-items:flex-end; gap:8px; height:80px; padding-top:8px;"></div>
                     <div id="weeklyLabels" style="display:flex; gap:8px; margin-top:6px;"></div>
                 </div>
+                <div class="dash-card" style="margin-top:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                        <h3><i class="ti ti-clock" style="color:#2E86DE;"></i> 오늘 복용 일정</h3>
+                        <span id="timelineDate" style="font-size:12px; color:#7a94a8;"></span>
+                    </div>
+                    <div style="position:relative; overflow-x:auto;">
+                        <div id="timelineLabels" style="display:flex; margin-bottom:6px;"></div>
+                        <div id="timelineBar" style="position:relative; height:60px; background:#F8FBFF; border-radius:8px; overflow:visible;"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 약장 페이지 -->
+        <!-- 약장 -->
         <div class="page" id="page-약장">
             <div class="page-header">
                 <h1>내 약장</h1>
                 <div class="page-header-right">
-                    <!-- 표/카드 토글. mode 'table' 또는 'card' -->
+                    <div class="view-toggle">
+                        <button id="toggleSimpleBtn" class="active" onclick="setUserMode('simple')">일반인</button>
+                        <button id="toggleExpertBtn" onclick="setUserMode('expert')">전문가</button>
+                    </div>
                     <div class="view-toggle">
                         <button id="toggleTableBtn" class="active" onclick="setViewMode('table')"><i class="ti ti-table"></i> 표</button>
                         <button id="toggleCardBtn" onclick="setViewMode('card')"><i class="ti ti-layout-grid"></i> 카드</button>
@@ -226,18 +224,29 @@
                     <button class="add-btn" onclick="openForm()">+ 처방 추가</button>
                 </div>
             </div>
-            <!-- 여기에 JS가 표 또는 카드를 그려넣음 -->
             <div id="prescriptionContainer"></div>
         </div>
 
+        <!-- 검색 -->
         <div class="page" id="page-검색">
             <div class="page-header"><h1>약 검색</h1></div>
-            <div class="coming-soon">준비 중이에요</div>
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <input id="drugSearchInput" type="text" placeholder="약 이름을 입력하세요 (예: 타이레놀)"
+                    style="flex:1; padding:11px 14px; border:1px solid #DAEAF8; border-radius:10px; font-size:14px;"
+                    onkeydown="if(event.key==='Enter') searchDrugInfo()">
+                <button onclick="searchDrugInfo()"
+                    style="padding:11px 20px; background:#2E86DE; color:white; border:none; border-radius:10px; font-size:14px; cursor:pointer;">검색</button>
+            </div>
+            <div id="drugSearchResults"></div>
         </div>
+
+        <!-- 공유 -->
         <div class="page" id="page-공유">
-           <div class="page-header"><h1>공유</h1></div>
-           <div id="shareContainer"></div>
+            <div class="page-header"><h1>공유</h1></div>
+            <div id="shareContainer"></div>
         </div>
+
+        <!-- 설정 -->
         <div class="page" id="page-설정">
             <div class="page-header"><h1>설정</h1></div>
             <div class="coming-soon">준비 중이에요</div>
@@ -249,28 +258,30 @@
         <div class="form-box">
             <h2 id="formTitle">처방 추가</h2>
             <p class="section-title">처방 정보</p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                 <div>
-                    <label>병원명</label>
-                    <input type="text" id="hospital" placeholder="예) 강남 피부과">
+                    <label style="font-size:12px;color:#7a94a8;margin-bottom:6px;display:block;font-weight:600;">병원명</label>
+                    <input type="text" id="hospital" placeholder="예) 강남 피부과"
+                        style="width:100%;padding:12px 14px;border:1px solid #DAEAF8;border-radius:10px;font-size:14px;color:#1a2a3a;">
                 </div>
                 <div>
-                    <label>진료일</label>
-                    <input type="text" id="visitDate" class="flatpickr-input" placeholder="날짜 선택" readonly>
+                    <label style="font-size:12px;color:#7a94a8;margin-bottom:6px;display:block;font-weight:600;">진료일</label>
+                    <input type="text" id="visitDate" class="flatpickr-input" placeholder="날짜 선택" readonly
+                        style="width:100%;padding:12px 14px;border:1px solid #DAEAF8;border-radius:10px;font-size:14px;cursor:pointer;background:white;color:#1a2a3a;">
                 </div>
             </div>
-            <p class="section-title" style="margin-top: 24px;">약 목록</p>
+            <p class="section-title" style="margin-top:24px;">약 목록</p>
             <table class="drug-input-table">
                 <thead>
                     <tr>
-                        <th style="width: 18%;">약 이름</th>
-                        <th style="width: 13%;">복용량</th>
-                        <th style="width: 11%;">횟수</th>
-                        <th style="width: 16%;">시간</th>
-                        <th style="width: 12%;">식전/후</th>
-                        <th style="width: 13%;">처방일수</th>
-                        <th style="width: 10%;">재처방</th>
-                        <th style="width: 5%;"></th>
+                        <th style="width:18%;">약 이름</th>
+                        <th style="width:12%;">복용량</th>
+                        <th style="width:10%;">횟수</th>
+                        <th style="width:22%;">시간</th>
+                        <th style="width:11%;">식전/후</th>
+                        <th style="width:11%;">처방일수</th>
+                        <th style="width:10%;">재처방</th>
+                        <th style="width:4%;"></th>
                     </tr>
                 </thead>
                 <tbody id="drugTableBody"></tbody>
@@ -282,11 +293,12 @@
 
     <script>
         let editingId = null;
-        let viewMode = 'table'; // 현재 보기 모드. 'table' 또는 'card'
+        let viewMode = 'table';
+        let userMode = 'simple';
 
-        // 서버에서 넘겨준 처방전 데이터를 JS 변수로도 저장 (토글할 때 재사용)
         const prescriptionsData = {{ prescriptions | tojson }};
 
+        // ── 네비게이션 ──
         function navigate(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + page).classList.add('active');
@@ -294,11 +306,18 @@
                 m.classList.toggle('active', m.textContent.includes(page));
             });
             if (page === '대시보드') loadDashboard();
-            if (page === '약장') renderPrescriptions(); // 약장 들어갈 때마다 현재 모드로 그리기
+            if (page === '약장') renderPrescriptions();
             if (page === '공유') renderSharePage();
         }
 
-        // 표/카드 모드 전환
+        // ── 약장 뷰 모드 ──
+        function setUserMode(mode) {
+            userMode = mode;
+            document.getElementById('toggleSimpleBtn').classList.toggle('active', mode === 'simple');
+            document.getElementById('toggleExpertBtn').classList.toggle('active', mode === 'expert');
+            renderPrescriptions();
+        }
+
         function setViewMode(mode) {
             viewMode = mode;
             document.getElementById('toggleTableBtn').classList.toggle('active', mode === 'table');
@@ -306,81 +325,130 @@
             renderPrescriptions();
         }
 
-        // 현재 모드에 맞게 약장 화면 그리기
         function renderPrescriptions() {
             const container = document.getElementById('prescriptionContainer');
-
             if (prescriptionsData.length === 0) {
                 container.innerHTML = '<div class="empty">아직 등록된 약이 없어요</div>';
                 return;
             }
-
-            if (viewMode === 'table') {
-                container.innerHTML = renderTableView();
-            } else {
-                container.innerHTML = renderCardView();
-            }
+            container.innerHTML = viewMode === 'table' ? renderTableView() : renderCardView();
         }
 
-        // 표 모드 — 처방전 카드 안에 약 목록 표
-        function renderTableView() {
-            return prescriptionsData.map(p => {
-                const refillBadges = p.drugs.filter(d => d.refill_date)
-                    .map(d => `<span class="refill-badge">재처방 ${d.refill_date}</span>`).join('');
-
-                const rows = p.drugs.map(d => `
-                    <tr>
-                        <td>${d.drug_name}</td>
-                        <td>${d.dosage}</td>
-                        <td>${d.frequency}</td>
-                        <td><span class="time-badge">${d.times}</span></td>
-                        <td>${d.meal_timing}</td>
-                        <td>${d.days}일</td>
-                    </tr>
-                `).join('');
-
-                return `
-                    <div class="prescription-card">
-                        <div class="prescription-header">
-                            <div class="prescription-header-left">
-                                <div class="prescription-icon"><i class="ti ti-building-hospital"></i></div>
-                                <div>
-                                    <h3>${p.hospital}</h3>
-                                    <p>${p.visit_date}</p>
-                                </div>
-                            </div>
-                            <div class="prescription-header-right">
-                                ${refillBadges}
-                                <button class="edit-btn" onclick='openEditForm(${p.id}, "${p.hospital}", "${p.visit_date}", ${JSON.stringify(p.drugs)})'>수정</button>
-                                <button class="delete-btn" onclick="deletePrescription(${p.id})">✕</button>
-                            </div>
+        // ── 표 모드 ─
+        
+    function renderTableView() {
+    if (userMode === 'expert') {
+        const seen = new Set();
+        const uniqueDrugs = prescriptionsData.flatMap(p => p.drugs).filter(d => {
+            if (seen.has(d.drug_name)) return false;
+            seen.add(d.drug_name);
+            return true;
+        });
+        return `
+            <div id="expertList">
+                ${uniqueDrugs.map(d => `
+                    <div style="background:white;border-radius:16px;border:1px solid #EEF2F6;margin-bottom:12px;padding:20px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(46,134,222,0.06);"
+                        onclick="openExpertView('${d.drug_name.replace(/'/g, "\\'")}', '${(d.ingredient||'').replace(/'/g, "\\'")}')">
+                        <div>
+                            <div style="font-size:16px;font-weight:700;color:#1a2a3a;margin-bottom:4px;">${d.drug_name}</div>
+                            ${d.ingredient ? `<span style="background:#EBF5FF;color:#2E86DE;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;">${d.ingredient}</span>` : ''}
                         </div>
-                        <table class="drug-table">
-                            <thead>
-                                <tr><th>약 이름</th><th>복용량</th><th>횟수</th><th>시간</th><th>식전/후</th><th>처방일수</th></tr>
-                            </thead>
-                            <tbody>${rows}</tbody>
-                        </table>
+                        <i class="ti ti-chevron-right" style="font-size:18px;color:#aaa;"></i>
                     </div>
-                `;
-            }).join('');
-        }
+                `).join('')}
+            </div>
+            <div id="expertDetail" style="display:none;"></div>
+        `;
+    }
 
-        // 카드 모드 — 약 하나하나를 카드로. 재처방 D-day 계산해서 뱃지 색 다르게
+    return prescriptionsData.map(p => {
+        const refillBadges = p.drugs.filter(d => d.refill_date)
+            .map(d => `<span class="refill-badge">재처방 ${d.refill_date}</span>`).join('');
+
+        const header = `
+            <div class="prescription-card">
+                <div class="prescription-header">
+                    <div class="prescription-header-left">
+                        <div class="prescription-icon"><i class="ti ti-building-hospital"></i></div>
+                        <div>
+                            <h3>${p.hospital}</h3>
+                            <p>${p.visit_date}</p>
+                        </div>
+                    </div>
+                    <div class="prescription-header-right">
+                        ${refillBadges}
+                        <button class="edit-btn" onclick='openEditForm(${p.id}, "${p.hospital}", "${p.visit_date}", ${JSON.stringify(p.drugs)})'>수정</button>
+                        <button class="delete-btn" onclick="deletePrescription(${p.id})">✕</button>
+                    </div>
+                </div>
+        `;
+
+        const rows = p.drugs.map(d => `
+            <tr>
+                <td>${d.drug_name}</td>
+                <td>${d.dosage}</td>
+                <td>${d.frequency}</td>
+                <td><span class="time-badge">${d.times}</span></td>
+                <td>${d.meal_timing}</td>
+                <td>${d.days}일</td>
+            </tr>
+        `).join('');
+
+        return header + `
+            <table class="drug-table">
+                <thead>
+                    <tr>
+                        <th>약 이름</th>
+                        <th>복용량</th><th>횟수</th><th>시간</th><th>식전/후</th><th>처방일수</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>`;
+    }).join('');
+}
+
+
+        async function loadExpertDetail(prescriptionId, drugId, drugName) {
+    const container = document.getElementById(`expert-detail-${prescriptionId}-${drugId}`);
+    container.innerHTML = `<div style="text-align:center;color:#aaa;font-size:13px;grid-column:1/-1;padding:12px 0;">불러오는 중...</div>`;
+    try {
+        const res = await fetch('/drug-info?name=' + encodeURIComponent(drugName));
+        const items = await res.json();
+        if (!items.length) {
+            container.innerHTML = `<div style="text-align:center;color:#aaa;font-size:13px;grid-column:1/-1;padding:12px 0;">정보를 찾을 수 없어요</div>`;
+            return;
+        }
+        const d = items[0];
+        container.innerHTML = [
+            ['효능/효과', d.efficacy],
+            ['복용 방법', d.usage],
+            ['⚠️ 주의사항', d.caution],
+            ['부작용', d.side_effect],
+            ['약물 상호작용', d.interaction],
+            ['보관 방법', d.storage],
+        ].filter(([,v]) => v).map(([label, text]) => `
+            <div>
+                <p style="font-size:11px;font-weight:600;color:#7a94a8;margin:0 0 4px;">${label}</p>
+                <p style="font-size:13px;color:#1a2a3a;line-height:1.6;margin:0;">${text}</p>
+            </div>
+        `).join('');
+    } catch(e) {
+        container.innerHTML = `<div style="text-align:center;color:#aaa;font-size:13px;grid-column:1/-1;">오류가 발생했어요</div>`;
+    }
+}
+
+        // ── 카드 모드 ──
         function renderCardView() {
             const today = new Date();
             let cards = '';
-
             prescriptionsData.forEach(p => {
                 p.drugs.forEach(d => {
                     let statusBadge = '<span class="drug-card-status">복용 중</span>';
                     if (d.refill_date) {
                         const diff = Math.ceil((new Date(d.refill_date) - today) / (1000*60*60*24));
-                        if (diff <= 7) {
-                            statusBadge = `<span class="drug-card-status urgent">D-${diff}</span>`;
-                        }
+                        if (diff <= 7) statusBadge = `<span class="drug-card-status urgent">D-${diff}</span>`;
                     }
-
                     cards += `
                         <div class="drug-card">
                             <div class="drug-card-top">
@@ -407,72 +475,156 @@
                     `;
                 });
             });
-
             return `<div class="drug-card-grid">${cards}</div>`;
         }
 
-        // 공유 페이지 — 처방전 목록 보여주고 링크 생성 버튼
-function renderSharePage() {
-    const container = document.getElementById('shareContainer');
-    if (prescriptionsData.length === 0) {
-        container.innerHTML = '<div class="empty">공유할 처방전이 없어요</div>';
-        return;
+        // ── 전문가 뷰 상세정보 팝업 ──
+        async function showDrugDetail(drugName, btn) {
+            const existing = btn.closest('tr').querySelector('.drug-detail-row');
+            if (existing) { existing.remove(); return; }
+            btn.textContent = '로딩 중...';
+            try {
+                const res = await fetch('/search-drug?name=' + encodeURIComponent(drugName) + '&detail=true');
+                const items = await res.json();
+                btn.textContent = '상세정보';
+                if (!items.length) { alert('상세 정보를 찾을 수 없어요'); return; }
+                const d = items[0];
+                const detail = document.createElement('tr');
+                detail.className = 'drug-detail-row';
+                detail.innerHTML = `
+                    <td colspan="8" style="padding:16px 20px;background:#F8FBFF;border-top:1px solid #EEF6FF;">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px;">
+                            ${d.efficacy ? `<div><p style="font-weight:600;color:#1a2a3a;margin-bottom:4px;">효능/효과</p><p style="color:#4a6580;line-height:1.6;">${d.efficacy}</p></div>` : ''}
+                            ${d.usage ? `<div><p style="font-weight:600;color:#1a2a3a;margin-bottom:4px;">복용법</p><p style="color:#4a6580;line-height:1.6;">${d.usage}</p></div>` : ''}
+                        </div>
+                        <button onclick="this.closest('tr').remove()" style="margin-top:12px;border:none;background:#EBF5FF;color:#2E86DE;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px;">닫기</button>
+                    </td>
+                `;
+                btn.closest('tr').after(detail);
+            } catch (e) { btn.textContent = '상세정보'; }
+        }
+
+       async function openExpertView(drugName, ingredient) {
+    const list = document.getElementById('expertList');
+    const detail = document.getElementById('expertDetail');
+    list.style.display = 'none';
+    detail.style.display = 'block';
+    detail.innerHTML = `
+        <div style="margin-bottom:20px;">
+            <button onclick="closeExpertView()" style="border:none;background:#EBF5FF;color:#2E86DE;padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;margin-bottom:20px;">← 목록으로</button>
+            <div style="font-size:22px;font-weight:700;color:#1a2a3a;margin-bottom:6px;">${drugName}</div>
+            ${ingredient ? `<span style="background:#EBF5FF;color:#2E86DE;font-size:12px;padding:4px 12px;border-radius:20px;font-weight:600;">성분: ${ingredient}</span>` : ''}
+        </div>
+        <div style="text-align:center;padding:40px;color:#aaa;">불러오는 중...</div>
+    `;
+
+    try {
+        const res = await fetch('/drug-expert?name=' + encodeURIComponent(drugName));
+        const d = await res.json();
+
+        const sections = [
+            ['효능/효과', d.efficacy],
+            ['용법/용량', d.usage],
+            ['⚠️ 경고', d.warning],
+            ['복용 금기', d.contraindication],
+            ['복용 전 주의', d.caution_before],
+            ['복용 중단 시', d.caution_stop],
+            ['일반 주의사항', d.caution_general],
+            ['저장방법', d.storage],
+        ].filter(([, v]) => v);
+
+        const sectionsHtml = sections.length
+            ? sections.map(([label, text]) => `
+                <div style="background:white;border-radius:14px;border:1px solid #EEF2F6;padding:20px 24px;margin-bottom:12px;box-shadow:0 2px 8px rgba(46,134,222,0.04);">
+                    <div style="font-size:11px;font-weight:700;color:#7a94a8;margin-bottom:10px;letter-spacing:0.5px;text-transform:uppercase;">${label}</div>
+                    <div style="font-size:14px;color:#1a2a3a;line-height:1.9;">${text}</div>
+                </div>
+            `).join('')
+            : '<div style="text-align:center;padding:40px;color:#aaa;">전문가용 허가사항 데이터가 없어요</div>';
+
+        detail.innerHTML = `
+            <div style="margin-bottom:20px;">
+                <button onclick="closeExpertView()" style="border:none;background:#EBF5FF;color:#2E86DE;padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;margin-bottom:20px;">← 목록으로</button>
+                <div style="font-size:22px;font-weight:700;color:#1a2a3a;margin-bottom:6px;">${drugName}</div>
+                ${ingredient ? `<span style="background:#EBF5FF;color:#2E86DE;font-size:12px;padding:4px 12px;border-radius:20px;font-weight:600;">성분: ${ingredient}</span>` : ''}
+            </div>
+            ${sectionsHtml}
+        `;
+    } catch(e) {
+        detail.innerHTML += '<div style="text-align:center;color:#aaa;padding:20px;">오류가 발생했어요</div>';
     }
-    container.innerHTML = prescriptionsData.map(p => `
-        <div class="prescription-card">
-            <div class="prescription-header">
-                <div class="prescription-header-left">
-                    <div class="prescription-icon"><i class="ti ti-building-hospital"></i></div>
-                    <div>
-                        <h3>${p.hospital}</h3>
-                        <p>${p.visit_date} · 약 ${p.drugs.length}개</p>
+}
+
+function closeExpertView() {
+    document.getElementById('expertList').style.display = 'block';
+    document.getElementById('expertDetail').style.display = 'none';
+}
+        // ── 공유 페이지 ──
+        function renderSharePage() {
+            const container = document.getElementById('shareContainer');
+            if (prescriptionsData.length === 0) {
+                container.innerHTML = '<div class="empty">공유할 처방전이 없어요</div>';
+                return;
+            }
+            container.innerHTML = prescriptionsData.map(p => `
+                <div class="prescription-card">
+                    <div class="prescription-header">
+                        <div class="prescription-header-left">
+                            <div class="prescription-icon"><i class="ti ti-building-hospital"></i></div>
+                            <div>
+                                <h3>${p.hospital}</h3>
+                                <p>${p.visit_date} · 약 ${p.drugs.length}개</p>
+                            </div>
+                        </div>
+                        <button class="edit-btn" onclick="generateShareLink(${p.id}, this)">링크 생성</button>
+                    </div>
+                    <div class="share-result" id="shareResult-${p.id}" style="display:none;padding:16px 20px;"></div>
+                </div>
+            `).join('');
+        }
+
+        async function generateShareLink(prescriptionId, btn) {
+            const res = await fetch('/share/' + prescriptionId, { method: 'POST' });
+            const data = await res.json();
+            const link = window.location.origin + '/shared/' + data.token;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(link)}`;
+            const resultEl = document.getElementById('shareResult-' + prescriptionId);
+            resultEl.style.display = 'block';
+            resultEl.innerHTML = `
+                <div style="display:flex;gap:20px;align-items:flex-start;padding:4px 0;">
+                    <img src="${qrUrl}" alt="QR" style="border-radius:8px;border:1px solid #DAEAF8;flex-shrink:0;">
+                    <div style="flex:1;">
+                        <p style="font-size:12px;color:#7a94a8;margin-bottom:10px;">QR 스캔 또는 링크로 공유하세요</p>
+                        <div style="display:flex;gap:8px;">
+                            <input type="text" value="${link}" readonly style="flex:1;padding:10px;border:1px solid #DAEAF8;border-radius:8px;font-size:12px;color:#7a94a8;">
+                            <button onclick="copyLink('${link}', this)" style="padding:10px 16px;background:#2E86DE;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;">복사</button>
+                        </div>
                     </div>
                 </div>
-                <button class="edit-btn" onclick="generateShareLink(${p.id}, this)">링크 생성</button>
-            </div>
-            <div class="share-result" id="shareResult-${p.id}" style="display:none; padding:16px 20px;"></div>
-        </div>
-    `).join('');
-}
+            `;
+        }
 
-// 공유 링크 생성. 서버 호출해서 토큰 받고 화면에 표시
-async function generateShareLink(prescriptionId, btn) {
-    const res = await fetch('/share/' + prescriptionId, { method: 'POST' });
-    const data = await res.json();
-    const link = window.location.origin + '/shared/' + data.token;
+        function copyLink(link, btn) {
+            navigator.clipboard.writeText(link);
+            btn.textContent = '복사됨!';
+            setTimeout(() => { btn.textContent = '복사'; }, 1500);
+        }
 
-    const resultEl = document.getElementById('shareResult-' + prescriptionId);
-    resultEl.style.display = 'block';
-    resultEl.innerHTML = `
-        <div style="display:flex; gap:8px; align-items:center;">
-            <input type="text" value="${link}" readonly style="flex:1; padding:10px; border:1px solid #DAEAF8; border-radius:8px; font-size:12px; color:#7a94a8;">
-            <button onclick="copyLink('${link}', this)" style="padding:10px 16px; background:#2E86DE; color:white; border:none; border-radius:8px; font-size:12px; cursor:pointer;">복사</button>
-        </div>
-    `;
-}
-
-// 링크 클립보드에 복사
-function copyLink(link, btn) {
-    navigator.clipboard.writeText(link);
-    btn.textContent = '복사됨!';
-    setTimeout(() => { btn.textContent = '복사'; }, 1500);
-}
+        // ── 대시보드 ──
         async function loadDashboard() {
             const res = await fetch('/today');
             const drugs = await res.json();
-
             const total = drugs.length;
             const done = drugs.filter(d => d.is_taken).length;
             document.getElementById('progressFill').style.width = total ? (done / total * 100) + '%' : '0%';
             document.getElementById('progressText').textContent = `${done} / ${total} 완료`;
             document.getElementById('doseDone').textContent = done;
-document.getElementById('doseTotal').textContent = total;
+            document.getElementById('doseTotal').textContent = total;
 
             const listEl = document.getElementById('todayList');
-            if (drugs.length === 0) {
-                listEl.innerHTML = '<div class="dash-empty">오늘 복용할 약이 없어요</div>';
-            } else {
-                listEl.innerHTML = drugs.map(d => `
+            listEl.innerHTML = drugs.length === 0
+                ? '<div class="dash-empty">오늘 복용할 약이 없어요</div>'
+                : drugs.map(d => `
                     <div class="check-item">
                         <div class="check-box ${d.is_taken ? 'checked' : ''}" onclick="toggleCheck(${d.id}, this)">${d.is_taken ? '✓' : ''}</div>
                         <div class="check-info">
@@ -482,7 +634,6 @@ document.getElementById('doseTotal').textContent = total;
                         <span class="check-time-badge">${d.times}</span>
                     </div>
                 `).join('');
-            }
 
             const today = new Date();
             const refillSoon = drugs.filter(d => {
@@ -491,65 +642,83 @@ document.getElementById('doseTotal').textContent = total;
                 return diff <= 7 && diff >= 0;
             });
             const refillEl = document.getElementById('refillList');
-            if (refillSoon.length === 0) {
-                refillEl.innerHTML = '<div class="dash-empty">임박한 재처방이 없어요</div>';
-            } else {
-                refillEl.innerHTML = refillSoon.map(d => {
+            refillEl.innerHTML = refillSoon.length === 0
+                ? '<div class="dash-empty">임박한 재처방이 없어요</div>'
+                : refillSoon.map(d => {
                     const diff = Math.ceil((new Date(d.refill_date) - today) / (1000*60*60*24));
+                    const isUrgent = diff <= 3;
                     return `
-                        <div class="refill-item">
+                        <div class="refill-item" style="${isUrgent ? 'background:#FFF5F5;margin:0 -20px;padding:10px 20px;border-radius:8px;' : ''}">
                             <div>
-                                <p class="refill-item-name">${d.drug_name}</p>
+                                <p class="refill-item-name" style="${isUrgent ? 'color:#D14343;' : ''}">${d.drug_name}</p>
                                 <p class="refill-item-date">${d.refill_date}</p>
                             </div>
-                            <span class="refill-dday">D-${diff}</span>
+                            <span class="refill-dday" style="${isUrgent ? 'background:#FFE0E0;color:#D14343;animation:pulse 1.5s infinite;' : ''}">D-${diff}</span>
                         </div>
                     `;
                 }).join('');
-            }
 
-            const prescriptionCount = new Set(drugs.map(d => d.prescription_id)).size;
-            document.getElementById('statPrescriptions').textContent = prescriptionCount;
+            document.getElementById('statPrescriptions').textContent = new Set(drugs.map(d => d.prescription_id)).size;
             document.getElementById('statDrugs').textContent = total;
 
-            // 주간 복약 순응도 차트
-            const weekRes = await fetch('/weekly');
-            const weekData = await weekRes.json();
-
-            const chartEl = document.getElementById('weeklyChart');
-            const labelEl = document.getElementById('weeklyLabels');
+            // 주간 차트
+            const weekData = await (await fetch('/weekly')).json();
             const today2 = new Date().toISOString().split('T')[0];
-
-            chartEl.innerHTML = weekData.map(d => {
+            document.getElementById('weeklyChart').innerHTML = weekData.map(d => {
                 const isToday = d.date === today2;
-                const height = Math.max(d.rate, 4); // 최소 높이
                 const color = d.rate >= 80 ? '#7C6FF0' : d.rate >= 50 ? '#A78BFA' : '#DAEAF8';
                 return `
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;">
-                        <span style="font-size:10px; color:${isToday ? '#7C6FF0' : '#7a94a8'}; font-weight:${isToday ? '600' : '400'};">${d.rate}%</span>
-                        <div style="width:100%; height:${height}px; background:${isToday ? '#7C6FF0' : color}; border-radius:4px 4px 0 0; transition:height 0.3s;"></div>
-                    </div>
-                `;
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+                        <span style="font-size:10px;color:${isToday?'#7C6FF0':'#7a94a8'};font-weight:${isToday?'600':'400'};">${d.rate}%</span>
+                        <div style="width:100%;height:${Math.max(d.rate,4)}px;background:${isToday?'#7C6FF0':color};border-radius:4px 4px 0 0;transition:height 0.3s;"></div>
+                    </div>`;
+            }).join('');
+            document.getElementById('weeklyLabels').innerHTML = weekData.map(d => {
+                const isToday = d.date === today2;
+                return `<div style="flex:1;text-align:center;font-size:11px;color:${isToday?'#7C6FF0':'#7a94a8'};font-weight:${isToday?'600':'400'};">${d.weekday}</div>`;
             }).join('');
 
-            labelEl.innerHTML = weekData.map(d => {
-                const isToday = d.date === today2;
-                return `<div style="flex:1; text-align:center; font-size:11px; color:${isToday ? '#7C6FF0' : '#7a94a8'}; font-weight:${isToday ? '600' : '400'};">${d.weekday}</div>`;
-            }).join('');
+            // 타임라인
+            const now = new Date();
+            document.getElementById('timelineDate').textContent =
+                `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} (${['일','월','화','수','목','금','토'][now.getDay()]})`;
+            document.getElementById('timelineLabels').innerHTML =
+                ['0','3','6','9','12','15','18','21','24'].map(h =>
+                    `<div style="flex:1;font-size:10px;color:#7a94a8;text-align:${h==='0'?'left':'center'};">${h}</div>`
+                ).join('');
+            const currentPct = (now.getHours() * 60 + now.getMinutes()) / (24 * 60) * 100;
+            const timeMap = { '아침':8, '점심':12, '저녁':18, '새벽':4, '아침·저녁':8, '아침·점심·저녁':8 };
+            document.getElementById('timelineBar').innerHTML =
+                `<div style="position:absolute;top:0;bottom:0;left:${currentPct}%;width:2px;background:#2E86DE;z-index:10;">
+                    <div style="position:absolute;top:-4px;left:-4px;width:10px;height:10px;background:#2E86DE;border-radius:50%;"></div>
+                </div>` +
+                drugs.map(d => {
+                    const hour = timeMap[d.times] || 8;
+                    const pct = (hour / 24) * 100;
+                    const isPast = now.getHours() >= hour;
+                    const color = d.is_taken ? '#7C6FF0' : isPast ? '#FFB3B3' : '#DAEAF8';
+                    const textColor = d.is_taken || isPast ? 'white' : '#7a94a8';
+                    const label = d.is_taken ? '✓ 복용' : isPast ? '미복용' : `${hour}시`;
+                    return `
+                        <div style="position:absolute;left:calc(${pct}% - 40px);top:8px;background:${color};border-radius:8px;padding:4px 8px;font-size:10px;color:${textColor};white-space:nowrap;z-index:5;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+                            <div style="font-weight:600;">${d.drug_name.length > 6 ? d.drug_name.substring(0,6)+'...' : d.drug_name}</div>
+                            <div style="opacity:0.85;">${label}</div>
+                        </div>`;
+                }).join('');
         }
-            
 
         async function toggleCheck(drugId, el) {
             await fetch('/check/' + drugId, { method: 'POST' });
             loadDashboard();
         }
 
+        // ── 폼 열기/닫기 ──
         function openForm() {
             editingId = null;
             document.getElementById('formTitle').textContent = '처방 추가';
             document.getElementById('hospital').value = '';
-            document.getElementById('formOverlay').classList.add('open');
             document.getElementById('drugTableBody').innerHTML = '';
+            document.getElementById('formOverlay').classList.add('open');
             flatpickr("#visitDate", { locale: "ko", dateFormat: "Y-m-d", defaultDate: "today", disableMobile: true });
             addDrugRow();
         }
@@ -558,51 +727,46 @@ document.getElementById('doseTotal').textContent = total;
             editingId = id;
             document.getElementById('formTitle').textContent = '처방 수정';
             document.getElementById('hospital').value = hospital;
-            document.getElementById('formOverlay').classList.add('open');
             document.getElementById('drugTableBody').innerHTML = '';
+            document.getElementById('formOverlay').classList.add('open');
             flatpickr("#visitDate", { locale: "ko", dateFormat: "Y-m-d", defaultDate: visitDate, disableMobile: true });
             drugs.forEach(drug => addDrugRow(drug));
         }
 
         function handleOverlayClick(e) {
-            if (e.target === document.getElementById('formOverlay')) {
+            if (e.target === document.getElementById('formOverlay'))
                 document.getElementById('formOverlay').classList.remove('open');
-            }
         }
 
-        function switchToInput(select, type, placeholder) {
+        // ── 약 행 추가 ──
+        function buildDaysSelect(selectedDays) {
+            const options = [3, 5, 7, 14, 30, 60, 90];
+            const isCustom = selectedDays && !options.includes(selectedDays);
+            if (isCustom) {
+                return `<div class="custom-cell"><input type="number" class="direct-val" value="${selectedDays}" style="width:100%;padding:8px 10px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;"><button class="back-btn" onclick="switchToDaysSelect(this)">✕</button></div>`;
+            }
+            return `<select data-field="days" onchange="if(this.value==='직접입력') switchToDaysInput(this)" style="width:100%;padding:8px 10px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;color:#1a2a3a;">
+                ${options.map(o => `<option ${selectedDays === o ? 'selected' : ''}>${o}일</option>`).join('')}
+                <option ${!selectedDays ? 'selected' : ''} value="3일">3일</option>
+                <option>직접입력</option>
+            </select>`.replace('<option value="3일">3일</option>', ''); // 중복 제거용 — 아래서 다시 처리
+        }
+
+        function switchToDaysInput(select) {
             const td = select.parentElement;
-            const field = select.dataset.field;
-            td.innerHTML = `<div class="custom-cell"><input type="${type}" placeholder="${placeholder}" class="direct-val"><button class="back-btn" onclick="switchToSelect(this,'${field}')">✕</button></div>`;
+            td.innerHTML = `<div class="custom-cell"><input type="number" class="direct-val" placeholder="일수" style="width:100%;padding:8px 10px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;"><button class="back-btn" onclick="switchToDaysSelect(this)">✕</button></div>`;
         }
 
-        function switchToSelect(btn, field) {
+        function switchToDaysSelect(btn) {
             const td = btn.closest('td');
-            td.innerHTML = buildSelect(field);
-        }
-
-        function buildSelect(field) {
-            if (field === 'times') {
-                return `<select data-field="times" onchange="if(this.value==='직접입력') switchToInput(this,'text','예) 취침 전')">
-                    <option>아침</option><option>점심</option><option>저녁</option>
-                    <option>아침·저녁</option><option>아침·점심·저녁</option><option>새벽</option>
-                    <option>직접입력</option>
-                </select>`;
-            }
-            if (field === 'days') {
-                return `<select data-field="days" onchange="if(this.value==='직접입력') switchToInput(this,'number','일수 입력')">
-                    <option>3일</option><option>5일</option><option>7일</option>
-                    <option>14일</option><option>30일</option><option>60일</option>
-                    <option>90일</option><option>직접입력</option>
-                </select>`;
-            }
+            td.innerHTML = buildDaysSelect(null);
         }
 
         function addDrugRow(drug = null) {
             const tbody = document.getElementById('drugTableBody');
             const tr = document.createElement('tr');
 
-            let dosageNum = '';
+            let dosageNum = '1';
             let dosageUnit = '정';
             if (drug && drug.dosage) {
                 const match = drug.dosage.match(/^([\d.]+)(.+)$/);
@@ -611,76 +775,124 @@ document.getElementById('doseTotal').textContent = total;
 
             const validDays = [3, 5, 7, 14, 30, 60, 90];
             const isDaysCustom = drug && !validDays.includes(drug.days);
-            const validTimes = ['아침', '점심', '저녁', '아침·저녁', '아침·점심·저녁', '새벽'];
-            const isTimesCustom = drug && !validTimes.includes(drug.times);
-
-            const timesCell = isTimesCustom
-                ? `<div class="custom-cell"><input type="text" class="direct-val" value="${drug.times}"><button class="back-btn" onclick="switchToSelect(this,'times')">✕</button></div>`
-                : buildSelect('times').replace('<option>' + (drug ? drug.times : '아침') + '</option>', '<option selected>' + (drug ? drug.times : '아침') + '</option>');
-
             const daysCell = isDaysCustom
-                ? `<div class="custom-cell"><input type="number" class="direct-val" value="${drug.days}"><button class="back-btn" onclick="switchToSelect(this,'days')">✕</button></div>`
-                : buildSelect('days').replace('<option>' + (drug ? drug.days + '일' : '3일') + '</option>', '<option selected>' + (drug ? drug.days + '일' : '3일') + '</option>');
+                ? `<div class="custom-cell"><input type="number" class="direct-val" value="${drug.days}" style="width:100%;padding:8px 10px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;"><button class="back-btn" onclick="switchToDaysSelect(this)">✕</button></div>`
+                : `<select data-field="days" onchange="if(this.value==='직접입력') switchToDaysInput(this)" style="width:100%;padding:8px 10px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;color:#1a2a3a;">
+                    <option ${drug&&drug.days===3?'selected':''}>3일</option>
+                    <option ${drug&&drug.days===5?'selected':''}>5일</option>
+                    <option ${drug&&drug.days===7?'selected':''}>7일</option>
+                    <option ${drug&&drug.days===14?'selected':''}>14일</option>
+                    <option ${drug&&drug.days===30?'selected':''}>30일</option>
+                    <option ${drug&&drug.days===60?'selected':''}>60일</option>
+                    <option ${drug&&drug.days===90?'selected':''}>90일</option>
+                    <option>직접입력</option>
+                   </select>`;
+
+            const timeOptions = ['아침', '점심', '저녁', '새벽'];
+            let selectedTimes = [];
+            let customTime = '';
+            if (drug && drug.times) {
+                drug.times.split('·').forEach(p => {
+                    if (timeOptions.includes(p.trim())) selectedTimes.push(p.trim());
+                    else customTime = p.trim();
+                });
+            }
 
             tr.innerHTML = `
-    <td style="position:relative;">
-        <input type="text" placeholder="타이레놀 500mg" value="${drug ? drug.drug_name : ''}" 
-            oninput="searchDrugAuto(this)" autocomplete="off">
-        <input type="text" class="ingredient-input" value="${drug ? drug.ingredient || '' : ''}" style="display:none;">
-        <div class="drug-dropdown" style="display:none; position:absolute; top:100%; left:0; width:400px; background:white; border:1px solid #DAEAF8; border-radius:8px; z-index:200; box-shadow:0 4px 12px rgba(0,0,0,0.1); max-height:240px; overflow-y:auto;"></div>
-    </td>
-    <td><div class="dosage-cell">
-        <input type="number" placeholder="1" min="0.5" step="0.5" value="${dosageNum}">
-        <select>
-            <option ${dosageUnit==='정'?'selected':''}>정</option>
-            <option ${dosageUnit==='mg'?'selected':''}>mg</option>
-            <option ${dosageUnit==='ml'?'selected':''}>ml</option>
-            <option ${dosageUnit==='포'?'selected':''}>포</option>
-            <option ${dosageUnit==='캡슐'?'selected':''}>캡슐</option>
-        </select>
-    </div></td>
-    <td><select>
-        <option ${drug&&drug.frequency==='하루 1회'?'selected':''}>하루 1회</option>
-        <option ${drug&&drug.frequency==='하루 2회'?'selected':''}>하루 2회</option>
-        <option ${!drug||drug.frequency==='하루 3회'?'selected':''}>하루 3회</option>
-        <option ${drug&&drug.frequency==='하루 4회'?'selected':''}>하루 4회</option>
-    </select></td>
-    <td>${timesCell}</td>
-    <td><select>
-        <option ${drug&&drug.meal_timing==='식전 30분'?'selected':''}>식전 30분</option>
-        <option ${!drug||drug.meal_timing==='식후 30분'?'selected':''}>식후 30분</option>
-        <option ${drug&&drug.meal_timing==='식간'?'selected':''}>식간</option>
-        <option ${drug&&drug.meal_timing==='상관없음'?'selected':''}>상관없음</option>
-    </select></td>
-    <td>${daysCell}</td>
-    <td><select>
-        <option ${!drug||!drug.refill_date?'selected':''}>없음</option>
-        <option ${drug&&drug.refill_date?'selected':''}>있음</option>
-    </select></td>
-    <td><button onclick="removeDrugRow(this)" style="border:none;background:none;color:#ccc;cursor:pointer;font-size:14px;">✕</button></td>
-`;
+                <td style="position:relative;min-width:160px;">
+                    <input type="text" placeholder="약 이름 검색..." value="${drug ? drug.drug_name : ''}"
+                        oninput="searchDrugAuto(this)" autocomplete="off">
+                    <input type="text" class="ingredient-input" value="${drug ? drug.ingredient || '' : ''}" style="display:none;">
+                    <div class="drug-dropdown" style="display:none;position:absolute;top:100%;left:0;width:400px;background:white;border:1px solid #DAEAF8;border-radius:8px;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,0.1);max-height:240px;overflow-y:auto;"></div>
+                </td>
+                <td style="min-width:110px;">
+                    <div style="display:flex;gap:4px;align-items:center;">
+                        <input type="number" class="dosage-num" min="0.5" step="0.5" value="${dosageNum}"
+                            style="width:52px;padding:8px 6px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;text-align:center;">
+                        <select class="dosage-unit" style="flex:1;padding:8px 4px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;">
+                            <option ${dosageUnit==='정'?'selected':''}>정</option>
+                            <option ${dosageUnit==='mg'?'selected':''}>mg</option>
+                            <option ${dosageUnit==='ml'?'selected':''}>ml</option>
+                            <option ${dosageUnit==='포'?'selected':''}>포</option>
+                            <option ${dosageUnit==='캡슐'?'selected':''}>캡슐</option>
+                        </select>
+                    </div>
+                </td>
+                <td style="min-width:90px;">
+                    <select style="width:100%;padding:8px 10px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;color:#1a2a3a;">
+                        <option ${drug&&drug.frequency==='하루 1회'?'selected':''}>하루 1회</option>
+                        <option ${drug&&drug.frequency==='하루 2회'?'selected':''}>하루 2회</option>
+                        <option ${!drug||drug.frequency==='하루 3회'?'selected':''}>하루 3회</option>
+                        <option ${drug&&drug.frequency==='하루 4회'?'selected':''}>하루 4회</option>
+                    </select>
+                </td>
+                <td style="min-width:180px; position:relative;">
+    <div class="time-dropdown-wrap">
+        <div class="time-display-btn" onclick="toggleTimeDropdown(this)"
+            style="padding:8px 10px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;color:#1a2a3a;background:white;cursor:pointer;display:flex;justify-content:space-between;align-items:center;min-height:38px;">
+            <span class="time-display-text">${selectedTimes.length || customTime ? (selectedTimes.join('·') + (customTime ? (selectedTimes.length ? '·' : '') + customTime : '')) : '선택'}</span>
+            <span style="color:#aaa;font-size:10px;">▼</span>
+        </div>
+        <div class="time-dropdown-menu" style="display:none;position:absolute;top:100%;left:0;width:200px;background:white;border:1px solid #DAEAF8;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.1);z-index:300;padding:8px 0;">
+            ${['아침','점심','저녁','새벽'].map(t => `
+                <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;font-size:13px;color:#1a2a3a;" onmouseover="this.style.background='#F0F7FF'" onmouseout="this.style.background='white'">
+                    <input type="checkbox" class="time-check" value="${t}" ${selectedTimes.includes(t)?'checked':''} onchange="updateTimeDisplay(this)" style="width:14px;height:14px;accent-color:#2E86DE;">
+                    ${t}
+                </label>
+            `).join('')}
+            <div style="border-top:1px solid #F0F7FF;margin:4px 0;"></div>
+            <div style="padding:6px 14px;">
+                <input type="text" class="custom-time-input" placeholder="직접입력 (예: 취침 전)" value="${customTime}"
+                    oninput="updateTimeDisplay(this)"
+                    style="width:100%;padding:6px 8px;border:1px solid #DAEAF8;border-radius:6px;font-size:12px;color:#1a2a3a;">
+            </div>
+        </div>
+    </div>
+</td>
+                <td style="min-width:90px;">
+                    <select style="width:100%;padding:8px 10px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;color:#1a2a3a;">
+                        <option ${drug&&drug.meal_timing==='식전 30분'?'selected':''}>식전 30분</option>
+                        <option ${!drug||drug.meal_timing==='식후 30분'?'selected':''}>식후 30분</option>
+                        <option ${drug&&drug.meal_timing==='식간'?'selected':''}>식간</option>
+                        <option ${drug&&drug.meal_timing==='상관없음'?'selected':''}>상관없음</option>
+                    </select>
+                </td>
+                <td style="min-width:80px;">${daysCell}</td>
+                <td style="min-width:70px;">
+                    <select style="width:100%;padding:8px 10px;border:1px solid #DAEAF8;border-radius:8px;font-size:13px;color:#1a2a3a;">
+                        <option ${!drug||!drug.refill_date?'selected':''}>없음</option>
+                        <option ${drug&&drug.refill_date?'selected':''}>있음</option>
+                    </select>
+                </td>
+                <td><button onclick="removeDrugRow(this)" style="border:none;background:none;color:#ccc;cursor:pointer;font-size:14px;">✕</button></td>
+            `;
             tbody.appendChild(tr);
         }
-        // 약 이름 입력 후 포커스 벗어나면 성분명 자동 검색
-async function searchIngredient(input) {
-    const name = input.value.trim();
-    if (!name) return;
 
-    const ingredientInput = input.parentElement.querySelector('.ingredient-input');
-    ingredientInput.value = '검색 중...';
-
-    try {
-        const res = await fetch('/search-drug?name=' + encodeURIComponent(name));
-        const data = await res.json();
-        ingredientInput.value = data.ingredient || '성분 정보 없음';
-    } catch (e) {
-        ingredientInput.value = '검색 실패';
-    }
+        function toggleTimeDropdown(btn) {
+    const menu = btn.nextElementSibling;
+    const isOpen = menu.style.display === 'block';
+    // 다른 열린 드롭다운 전부 닫기
+    document.querySelectorAll('.time-dropdown-menu').forEach(m => m.style.display = 'none');
+    menu.style.display = isOpen ? 'none' : 'block';
 }
 
-        function removeDrugRow(btn) {
-            btn.closest('tr').remove();
-        }
+function updateTimeDisplay(input) {
+    const wrap = input.closest('.time-dropdown-wrap');
+    const checks = Array.from(wrap.querySelectorAll('.time-check:checked')).map(c => c.value);
+    const custom = wrap.querySelector('.custom-time-input').value.trim();
+    const all = [...checks, ...(custom ? [custom] : [])];
+    wrap.querySelector('.time-display-text').textContent = all.length ? all.join('·') : '선택';
+}
+
+// 드롭다운 외부 클릭 시 닫기
+document.addEventListener('click', e => {
+    if (!e.target.closest('.time-dropdown-wrap')) {
+        document.querySelectorAll('.time-dropdown-menu').forEach(m => m.style.display = 'none');
+    }
+});
+
+        function removeDrugRow(btn) { btn.closest('tr').remove(); }
 
         function getCellValue(td) {
             const input = td.querySelector('.direct-val');
@@ -689,135 +901,156 @@ async function searchIngredient(input) {
             return select ? select.value : '';
         }
 
+        // ── 저장 ──
         async function saveForm() {
-    // 저장 전 드롭다운 전부 닫기
-    document.querySelectorAll('.drug-dropdown').forEach(d => d.style.display = 'none');
-    
-    // 나머지 기존 코드...
+            document.querySelectorAll('.drug-dropdown').forEach(d => d.style.display = 'none');
             const hospital = document.getElementById('hospital').value;
             const visitDate = document.getElementById('visitDate').value;
             const rows = document.getElementById('drugTableBody').querySelectorAll('tr');
 
             const drugs = Array.from(rows).map(row => {
                 const tds = row.querySelectorAll('td');
-                const dosageInput = tds[1].querySelector('input');
-                const dosageSelect = tds[1].querySelector('select');
-                const times = getCellValue(tds[3]);
-                const meal_timing = getCellValue(tds[4]);
-                const daysRaw = getCellValue(tds[5]);
-                const daysStr = daysRaw.replace('일', '');
-                const refillSelect = tds[6].querySelector('select');
-                const refillNeeded = refillSelect.value === '있음';
+                const checks = Array.from(tds[3].querySelectorAll('.time-check:checked')).map(c => c.value);
+const customTimeVal = tds[3].querySelector('.custom-time-input').value.trim();
+if (customTimeVal) checks.push(customTimeVal);
+const times = checks.join('·') || '아침';
+                const daysRaw = getCellValue(tds[5]).replace('일', '');
+                const refillNeeded = tds[6].querySelector('select').value === '있음';
                 let refillDate = '';
-
-                if (refillNeeded && visitDate && daysStr) {
-                    const date = new Date(visitDate);
-                    date.setDate(date.getDate() + parseInt(daysStr));
-                    refillDate = date.toISOString().split('T')[0];
+                if (refillNeeded && visitDate && daysRaw) {
+                    const d = new Date(visitDate);
+                    d.setDate(d.getDate() + parseInt(daysRaw));
+                    refillDate = d.toISOString().split('T')[0];
                 }
-
                 return {
                     drug_name: tds[0].querySelector('input').value,
                     ingredient: tds[0].querySelector('.ingredient-input').value || '',
-                    dosage: dosageInput.value + dosageSelect.value,
+                    dosage: tds[1].querySelector('.dosage-num').value + tds[1].querySelector('.dosage-unit').value,
                     frequency: tds[2].querySelector('select').value,
                     times,
-                    meal_timing,
-                    days: parseInt(daysStr) || 0,
+                    meal_timing: tds[4].querySelector('select').value,
+                    days: parseInt(daysRaw) || 0,
                     refill_date: refillDate
                 };
             });
 
             const url = editingId ? `/update/${editingId}` : '/add';
             const method = editingId ? 'PUT' : 'POST';
-
-            await fetch(url, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ hospital, visit_date: visitDate, drugs })
-            });
-
+            await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hospital, visit_date: visitDate, drugs }) });
             window.location.href = '/?page=약장&mode=' + viewMode;
-
         }
 
         async function deletePrescription(id) {
             await fetch('/delete/' + id, { method: 'DELETE' });
             window.location.href = '/?page=약장&mode=' + viewMode;
-
         }
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const targetPage = urlParams.get('page') || '대시보드';
-            const targetMode = urlParams.get('mode');
-            if (targetMode) viewMode = targetMode; // URL에 모드 있으면 적용
-            navigate(targetPage);
-            if (targetMode === 'card') {
-                document.getElementById('toggleTableBtn').classList.remove('active');
-                document.getElementById('toggleCardBtn').classList.add('active');
+        // ── 약 이름 자동완성 ──
+        let searchTimer = null;
+        let searchController = null;
+
+        async function searchDrugAuto(input) {
+            const name = input.value.trim();
+            const dropdown = input.parentElement.querySelector('.drug-dropdown');
+            if (name.length < 2) { dropdown.style.display = 'none'; return; }
+            clearTimeout(searchTimer);
+            if (searchController) searchController.abort();
+            searchTimer = setTimeout(async () => {
+                searchController = new AbortController();
+                try {
+                    const res = await fetch('/search-drug?name=' + encodeURIComponent(name), { signal: searchController.signal });
+                    const items = await res.json();
+                    if (!items.length) { dropdown.style.display = 'none'; return; }
+                    dropdown.style.display = 'block';
+                    dropdown.innerHTML = items.map(item => {
+                        const shortName = item.name.replace(/\s*\(.*\)$/, '').trim();
+                        return `
+                            <div style="padding:11px 16px;cursor:pointer;font-size:13px;color:#1a2a3a;border-bottom:1px solid #F0F7FF;"
+                                onmouseover="this.style.background='#F0F7FF'" onmouseout="this.style.background='white'"
+                                onmousedown="selectDrug(this, '${item.name.replace(/'/g, "\\'")}', '${shortName.replace(/'/g, "\\'")}')">
+                                ${shortName}
+                            </div>
+                        `;
+                    }).join('');
+                } catch (e) {
+                    if (e.name !== 'AbortError') dropdown.style.display = 'none';
+                }
+            }, 300);
+        }
+
+        async function selectDrug(el, fullName, shortName) {
+    const td = el.closest('td');
+    td.querySelector('input[type="text"]:not(.ingredient-input)').value = shortName || fullName;
+    td.querySelector('.drug-dropdown').style.display = 'none';
+    const ingredientInput = td.querySelector('.ingredient-input');
+    ingredientInput.value = '검색 중...';
+    try {
+        const res = await fetch('/search-drug?name=' + encodeURIComponent(fullName) + '&detail=true');
+        const items = await res.json();
+        ingredientInput.value = items.length ? (items[0].ingredient || '') : '';
+    } catch (e) { ingredientInput.value = ''; }
+}
+
+        // ── 검색 페이지 ──
+        let lastSearchResults = [];
+
+        async function searchDrugInfo() {
+            const name = document.getElementById('drugSearchInput').value.trim();
+            if (!name) return;
+            const container = document.getElementById('drugSearchResults');
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:#7a94a8;">검색 중...</div>';
+            try {
+                const drugs = await (await fetch('/drug-info?name=' + encodeURIComponent(name))).json();
+                lastSearchResults = drugs;
+                renderSearchResults(drugs);
+            } catch(e) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;">오류가 발생했어요</div>';
             }
-        // 약 이름 입력 시 자동완성 드롭다운
-        // 타이핑 중 — 약 이름만 빠르게
-let searchTimer = null;
-let searchController = null;
+        }
 
-async function searchDrugAuto(input) {
-    const name = input.value.trim();
-    const dropdown = input.parentElement.querySelector('.drug-dropdown');
-
-    if (name.length < 2) { dropdown.style.display = 'none'; return; }
-
-    // 이전 타이머 취소
-    clearTimeout(searchTimer);
-    // 이전 요청 취소
-    if (searchController) searchController.abort();
-
-    searchTimer = setTimeout(async () => {
-        searchController = new AbortController();
-        try {
-            const res = await fetch('/search-drug?name=' + encodeURIComponent(name), {
-                signal: searchController.signal
-            });
-            const items = await res.json();
-
-            if (!items.length) { dropdown.style.display = 'none'; return; }
-
-            dropdown.style.display = 'block';
-            dropdown.innerHTML = items.map(item => `
-                <div style="padding:11px 16px; cursor:pointer; font-size:13px; color:#1a2a3a; border-bottom:1px solid #F0F7FF;"
-                    onmouseover="this.style.background='#F0F7FF'"
-                    onmouseout="this.style.background='white'"
-                    onmousedown="selectDrug(this, '${item.name.replace(/'/g, "\\'")}')">
-                    ${item.name}
+        function renderSearchResults(drugs) {
+            const container = document.getElementById('drugSearchResults');
+            if (!drugs.length) {
+                container.innerHTML = '<div style="text-align:center;padding:60px;color:#aaa;">검색 결과가 없어요</div>';
+                return;
+            }
+            container.innerHTML = drugs.map(d => `
+                <div style="background:white;border-radius:16px;border:1px solid #EEF2F6;padding:20px 24px;margin-bottom:14px;box-shadow:0 4px 16px rgba(46,134,222,0.06);">
+                    <div style="font-size:17px;font-weight:700;color:#1a2a3a;margin-bottom:6px;">${d.name}</div>
+                    ${d.ingredient ? `<span style="background:#EBF5FF;color:#2E86DE;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;">성분: ${d.ingredient}</span>` : ''}
+                    <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
+                        ${makeRow('효능', d.efficacy)}
+                        ${makeRow('복용 방법', d.usage)}
+                        ${makeRow('⚠️ 주의사항', d.caution)}
+                        ${makeRow('부작용', d.side_effect)}
+                        ${makeRow('약물 상호작용', d.interaction)}
+                        ${makeRow('보관 방법', d.storage)}
+                    </div>
                 </div>
             `).join('');
-        } catch (e) {
-            if (e.name !== 'AbortError') dropdown.style.display = 'none';
         }
-    }, 300); // 300ms 후 호출
-}
 
-// 선택 후 — 성분명 추가로 가져오기
-async function selectDrug(el, name) {
-    const td = el.closest('td');
-    const nameInput = td.querySelector('input[type="text"]:not(.ingredient-input)');
-    const ingredientInput = td.querySelector('.ingredient-input');
-    const dropdown = td.querySelector('.drug-dropdown');
-
-    nameInput.value = name;
-    dropdown.style.display = 'none';
-    ingredientInput.value = '검색 중...';
-
-    try {
-        const res = await fetch('/search-drug?name=' + encodeURIComponent(name) + '&detail=true');
-        const items = await res.json();
-        if (items.length) {
-            ingredientInput.value = items[0].ingredient || '';
+        function makeRow(label, text) {
+            if (!text) return '';
+            return `
+                <div>
+                    <div style="font-size:11px;font-weight:700;color:#7a94a8;margin-bottom:4px;">${label}</div>
+                    <div style="font-size:13px;color:#4a6580;line-height:1.6;">${text}</div>
+                </div>
+                <hr style="border:none;border-top:1px solid #F0F7FF;margin:2px 0;">
+            `;
         }
-    } catch (e) {
-        ingredientInput.value = '';
-    }
-}
+
+        // ── 초기 로드 ──
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetPage = urlParams.get('page') || '대시보드';
+        const targetMode = urlParams.get('mode');
+        if (targetMode) {
+            viewMode = targetMode;
+            document.getElementById('toggleTableBtn').classList.toggle('active', targetMode === 'table');
+            document.getElementById('toggleCardBtn').classList.toggle('active', targetMode === 'card');
+        }
+        navigate(targetPage);
     </script>
 </body>
 </html>
