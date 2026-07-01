@@ -623,17 +623,18 @@ function closeExpertView() {
 
             const listEl = document.getElementById('todayList');
             listEl.innerHTML = drugs.length === 0
-                ? '<div class="dash-empty">오늘 복용할 약이 없어요</div>'
-                : drugs.map(d => `
-                    <div class="check-item">
-                        <div class="check-box ${d.is_taken ? 'checked' : ''}" onclick="toggleCheck(${d.id}, this)">${d.is_taken ? '✓' : ''}</div>
-                        <div class="check-info">
-                            <p>${d.drug_name}</p>
-                            <p>${d.hospital} · ${d.dosage} · ${d.frequency}</p>
-                        </div>
-                        <span class="check-time-badge">${d.times}</span>
-                    </div>
-                `).join('');
+    ? '<div class="dash-empty">오늘 복용할 약이 없어요</div>'
+    : drugs.map(d => `
+        <div class="check-item">
+            <div class="check-box ${d.is_taken ? 'checked' : ''}" 
+                onclick="toggleCheck(${d.id}, this, '${d.slot}')">${d.is_taken ? '✓' : ''}</div>
+            <div class="check-info">
+                <p>${d.drug_name}</p>
+                <p>${d.hospital} · ${d.dosage}</p>
+            </div>
+            <span class="check-time-badge">${d.slot}</span>
+        </div>
+    `).join('');
 
             const today = new Date();
             const refillSoon = drugs.filter(d => {
@@ -687,13 +688,26 @@ function closeExpertView() {
                     `<div style="flex:1;font-size:10px;color:#7a94a8;text-align:${h==='0'?'left':'center'};">${h}</div>`
                 ).join('');
             const currentPct = (now.getHours() * 60 + now.getMinutes()) / (24 * 60) * 100;
-            const timeMap = { '아침':8, '점심':12, '저녁':18, '새벽':4, '아침·저녁':8, '아침·점심·저녁':8 };
+            function slotToHour(slot) {
+    const map = { '아침':8, '점심':12, '저녁':18, '새벽':4, '취침 전':22 };
+    if (map[slot] !== undefined) return map[slot];
+    // 직접입력 시간 파싱 (예: "14시", "오전 4시", "14:00")
+    const m1 = slot.match(/오전\s*(\d+)시/);
+    if (m1) return parseInt(m1[1]);
+    const m2 = slot.match(/오후\s*(\d+)시/);
+    if (m2) return parseInt(m2[1]) + 12;
+    const m3 = slot.match(/(\d+)시/);
+    if (m3) return parseInt(m3[1]);
+    const m4 = slot.match(/(\d+):(\d+)/);
+    if (m4) return parseInt(m4[1]);
+    return 8;
+}
             document.getElementById('timelineBar').innerHTML =
                 `<div style="position:absolute;top:0;bottom:0;left:${currentPct}%;width:2px;background:#2E86DE;z-index:10;">
                     <div style="position:absolute;top:-4px;left:-4px;width:10px;height:10px;background:#2E86DE;border-radius:50%;"></div>
                 </div>` +
                 drugs.map(d => {
-                    const hour = timeMap[d.times] || 8;
+                    const hour = slotToHour(d.slot);;
                     const pct = (hour / 24) * 100;
                     const isPast = now.getHours() >= hour;
                     const color = d.is_taken ? '#7C6FF0' : isPast ? '#FFB3B3' : '#DAEAF8';
@@ -707,10 +721,10 @@ function closeExpertView() {
                 }).join('');
         }
 
-        async function toggleCheck(drugId, el) {
-            await fetch('/check/' + drugId, { method: 'POST' });
-            loadDashboard();
-        }
+        async function toggleCheck(drugId, el, slot) {
+    await fetch(`/check/${drugId}?slot=${encodeURIComponent(slot)}`, { method: 'POST' });
+    loadDashboard();
+}
 
         // ── 폼 열기/닫기 ──
         function openForm() {

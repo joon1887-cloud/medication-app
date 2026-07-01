@@ -37,14 +37,15 @@ def init_db():
     """)
 
     conn.execute("""
-        CREATE TABLE IF NOT EXISTS medication_logs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            drug_id INTEGER,
-            taken_date TEXT,
-            is_taken INTEGER DEFAULT 0,
-            FOREIGN KEY (drug_id) REFERENCES prescription_drugs(id) ON DELETE CASCADE
-        )
-    """)
+    CREATE TABLE IF NOT EXISTS medication_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        drug_id INTEGER,
+        taken_date TEXT,
+        time_slot TEXT DEFAULT '',
+        is_taken INTEGER DEFAULT 0,
+        FOREIGN KEY (drug_id) REFERENCES prescription_drugs(id) ON DELETE CASCADE
+    )
+""")
 
     conn.execute("""
         CREATE TABLE IF NOT EXISTS share_links (
@@ -56,4 +57,11 @@ def init_db():
         )
     """)
 
-    conn.commit()
+        # 기존 DB에 time_slot 컬럼 없으면 추가 (마이그레이션)
+    try:
+        conn.execute("ALTER TABLE medication_logs ADD COLUMN time_slot TEXT DEFAULT ''")
+        conn.commit()
+    except:
+        pass
+
+        conn.commit()

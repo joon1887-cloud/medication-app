@@ -204,24 +204,60 @@ def update_prescription(prescription_id: int, data: AddPrescription):
 def get_today_drugs():
     conn = get_db()
     today = date.today().isoformat()
+
     drugs = conn.execute("""
-        SELECT pd.*, p.hospital,
-               COALESCE(ml.is_taken, 0) as is_taken,
-               ml.id as log_id
+        SELECT pd.*, p.hospital
         FROM prescription_drugs pd
         JOIN prescriptions p ON pd.prescription_id = p.id
-        LEFT JOIN medication_logs ml ON ml.drug_id = pd.id AND ml.taken_date = ?
-    """, (today,)).fetchall()
-    return [dict(drug) for drug in drugs]
+    """).fetchall()
+
+    def parse_slots(times_str, frequency):
+        """times와 frequency로 오늘 복용해야 할 슬롯 목록 생성"""
+        times_list = [t.strip() for t in times_str.split('·') if t.strip()]
+        freq_map = {'하루 1회': 1, '하루 2회': 2, '하루 3회': 3, '하루 4회': 4}
+        count = freq_map.get(frequency, 1)
+
+        if not times_list:
+            times_list = ['아침']
+
+        # 슬롯 수가 frequency랑 다르면 frequency 기준으로 맞춤
+        if len(times_list) < count:
+            extras = ['아침', '점심', '저녁', '새벽', '취침 전']
+            for e in extras:
+                if e not in times_list:
+                    times_list.append(e)
+                if len(times_list) >= count:
+                    break
+        times_list = times_list[:count]
+        return times_list
+
+    result = []
+    for drug in drugs:
+        drug_dict = dict(drug)
+        slots = parse_slots(drug_dict['times'], drug_dict['frequency'])
+
+        for slot in slots:
+            log = conn.execute(
+                "SELECT * FROM medication_logs WHERE drug_id = ? AND taken_date = ? AND time_slot = ?",
+                (drug_dict['id'], today, slot)
+            ).fetchone()
+            result.append({
+                **drug_dict,
+                'slot': slot,
+                'is_taken': log['is_taken'] if log else 0,
+                'log_id': log['id'] if log else None,
+            })
+
+    return result
 
 
 @app.post("/check/{drug_id}")
-def toggle_check(drug_id: int):
+def toggle_check(drug_id: int, slot: str = ""):
     conn = get_db()
     today = date.today().isoformat()
     existing = conn.execute(
-        "SELECT * FROM medication_logs WHERE drug_id = ? AND taken_date = ?",
-        (drug_id, today)
+        "SELECT * FROM medication_logs WHERE drug_id = ? AND taken_date = ? AND time_slot = ?",
+        (drug_id, today, slot)
     ).fetchone()
     if existing:
         new_status = 0 if existing["is_taken"] else 1
@@ -231,12 +267,11 @@ def toggle_check(drug_id: int):
         )
     else:
         conn.execute(
-            "INSERT INTO medication_logs (drug_id, taken_date, is_taken) VALUES (?, ?, 1)",
-            (drug_id, today)
+            "INSERT INTO medication_logs (drug_id, taken_date, time_slot, is_taken) VALUES (?, ?, ?, 1)",
+            (drug_id, today, slot)
         )
     conn.commit()
     return {"ok": True}
-
 
 @app.post("/share/{prescription_id}")
 def create_share_link(prescription_id: int):
