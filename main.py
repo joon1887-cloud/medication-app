@@ -212,23 +212,10 @@ def get_today_drugs():
     """).fetchall()
 
     def parse_slots(times_str, frequency):
-        """times와 frequency로 오늘 복용해야 할 슬롯 목록 생성"""
+        """사용자가 선택한 시간대만 슬롯으로 사용"""
         times_list = [t.strip() for t in times_str.split('·') if t.strip()]
-        freq_map = {'하루 1회': 1, '하루 2회': 2, '하루 3회': 3, '하루 4회': 4}
-        count = freq_map.get(frequency, 1)
-
         if not times_list:
             times_list = ['아침']
-
-        # 슬롯 수가 frequency랑 다르면 frequency 기준으로 맞춤
-        if len(times_list) < count:
-            extras = ['아침', '점심', '저녁', '새벽', '취침 전']
-            for e in extras:
-                if e not in times_list:
-                    times_list.append(e)
-                if len(times_list) >= count:
-                    break
-        times_list = times_list[:count]
         return times_list
 
     result = []

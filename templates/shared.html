@@ -8,170 +8,200 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, sans-serif; background: #F5F5F7; min-height: 100vh; padding: 40px 20px; }
         .container { max-width: 900px; margin: 0 auto; }
-        .header { background: white; border-radius: 16px; padding: 24px; margin-bottom: 16px; border: 1px solid #DAEAF8; box-shadow: 0 4px 16px rgba(46,134,222,0.06); }
+        .header { background: white; border-radius: 16px; padding: 24px; margin-bottom: 16px; border: 1px solid #DAEAF8; }
         .header h1 { font-size: 18px; color: #1a2a3a; font-weight: 600; margin-bottom: 4px; }
         .header p { font-size: 13px; color: #7a94a8; }
         .badge { display: inline-block; background: #1a2a3a; color: white; font-size: 11px; padding: 4px 10px; border-radius: 6px; margin-bottom: 16px; font-weight: 500; }
-        .drug-card { background: white; border-radius: 16px; border: 1px solid #DAEAF8; margin-bottom: 20px; overflow: hidden; box-shadow: 0 4px 16px rgba(46,134,222,0.06); }
-        .drug-header { padding: 16px 20px; background: #F8FBFF; border-bottom: 1px solid #DAEAF8; display: flex; justify-content: space-between; align-items: center; }
-        .drug-name { font-size: 15px; font-weight: 600; color: #1a2a3a; }
-        .drug-info { font-size: 12px; color: #7a94a8; margin-top: 3px; }
-        .adherence-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        .adherence-high { background: #E8F8EE; color: #1E9E5A; }
-        .adherence-mid { background: #FFF3E0; color: #c05600; }
-        .adherence-low { background: #FFEAEA; color: #D14343; }
-
-        /* 달력 */
-        .calendar-wrap { padding: 20px; }
-        .calendar-month { margin-bottom: 24px; }
-        .calendar-month-title { font-size: 13px; font-weight: 600; color: #1a2a3a; margin-bottom: 10px; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-        .calendar-day-label { text-align: center; font-size: 11px; color: #7a94a8; padding: 4px 0; font-weight: 500; }
-        .calendar-day-label:first-child { color: #e05050; }
-        .calendar-day-label:last-child { color: #4a7ae0; }
-        .calendar-cell { aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; }
-        .calendar-cell.taken { background: #7C6FF0; color: white; }
-        .calendar-cell.missed { background: #FFE0E0; color: #D14343; }
-        .calendar-cell.empty { background: transparent; }
-        .calendar-cell.no-record { background: #F5F5F7; color: #ccc; }
-        .calendar-cell.today { outline: 2px solid #2E86DE; }
-
-        .legend { display: flex; gap: 16px; padding: 0 20px 16px; font-size: 12px; color: #7a94a8; }
-        .legend-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-right: 4px; vertical-align: middle; }
-
-        .log-empty { padding: 30px; text-align: center; color: #aaa; font-size: 13px; }
+        .drug-legend { background: white; border-radius: 16px; border: 1px solid #DAEAF8; padding: 16px 20px; margin-bottom: 16px; }
+        .drug-legend-title { font-size: 13px; font-weight: 600; color: #1a2a3a; margin-bottom: 10px; }
+        .drug-legend-list { display: flex; flex-wrap: wrap; gap: 12px; }
+        .drug-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #1a2a3a; }
+        .drug-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+        .drug-legend-sub { font-size: 10px; color: #7a94a8; }
+        .cal-card { background: white; border-radius: 16px; border: 1px solid #DAEAF8; padding: 20px; margin-bottom: 16px; }
+        .month-section { margin-bottom: 20px; }
+        .month-section:last-child { margin-bottom: 0; }
+        .month-label { font-size: 14px; font-weight: 600; color: #1a2a3a; margin-bottom: 8px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+        .cal-day-label { text-align: center; font-size: 10px; color: #aaa; padding: 4px 0; font-weight: 500; }
+        .cal-cell { min-height: 48px; border-radius: 6px; background: #FAFAFA; padding: 3px; display: flex; flex-direction: column; align-items: center; }
+        .cal-cell.empty { background: transparent; }
+        .cal-cell.today { outline: 2px solid #2E86DE; }
+        .cal-date { font-size: 10px; color: #999; margin-bottom: 2px; }
+        .cal-bars { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; }
+        .cal-bar { width: 6px; height: 6px; border-radius: 2px; }
+        .cal-bar.missed { opacity: 0.25; }
+        .status-row { display: flex; gap: 14px; padding: 10px 20px; font-size: 10px; color: #7a94a8; border-top: 1px solid #F0F0F0; margin-top: 12px; padding-top: 12px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 3px; vertical-align: middle; }
         .notice { margin-top: 16px; font-size: 12px; color: #7a94a8; text-align: center; }
     </style>
 </head>
 <body>
     <div class="container">
-        <span class="badge">복용 이력 공유 — 최근 1년</span>
+        <span class="badge">복용 이력 공유</span>
         <div class="header">
             <h1>{{ hospital }}</h1>
             <p>진료일: {{ visit_date }}</p>
         </div>
 
-        {% for drug in drugs %}
-        <div class="drug-card">
-            <div class="drug-header">
-                <div>
-                    <div class="drug-name">{{ drug.drug_name }}</div>
-                    <div class="drug-info">{{ drug.dosage }} · {{ drug.frequency }} · {{ drug.times }} · {{ drug.meal_timing }}</div>
-                </div>
-                <div>
-                    {% if drug.total_logs > 0 %}
-                        {% set rate = (drug.taken_count / drug.total_logs * 100) | round | int %}
-                        {% if rate >= 80 %}
-                        <span class="adherence-badge adherence-high">복약 순응도 {{ rate }}%</span>
-                        {% elif rate >= 50 %}
-                        <span class="adherence-badge adherence-mid">복약 순응도 {{ rate }}%</span>
-                        {% else %}
-                        <span class="adherence-badge adherence-low">복약 순응도 {{ rate }}%</span>
-                        {% endif %}
-                    {% else %}
-                        <span style="font-size:12px; color:#aaa;">기록 없음</span>
-                    {% endif %}
-                </div>
-            </div>
-
-            {% if drug.logs %}
-            <div class="legend">
-                <span><span class="legend-dot" style="background:#7C6FF0;"></span>복용</span>
-                <span><span class="legend-dot" style="background:#FFE0E0; border:1px solid #D14343;"></span>미복용</span>
-                <span><span class="legend-dot" style="background:#F5F5F7; border:1px solid #ddd;"></span>기록 없음</span>
-            </div>
-            <div class="calendar-wrap" id="calendar-{{ drug.id }}"></div>
-            {% else %}
-            <div class="log-empty">복용 기록이 없어요</div>
-            {% endif %}
+        <div class="drug-legend">
+            <div class="drug-legend-title">복용 약 목록</div>
+            <div class="drug-legend-list" id="legendList"></div>
         </div>
-        {% endfor %}
+
+        <div class="cal-card">
+            <div id="calendarContainer"></div>
+            <div class="status-row">
+    <span><span class="status-dot" style="background:#7C6FF0;"></span> 전체 복용</span>
+    <span><span class="status-dot" style="background:#7C6FF0; opacity:0.5;"></span> 일부 복용</span>
+    <span><span class="status-dot" style="background:#E8E8E8;"></span> 미복용</span>
+</div>
+        </div>
 
         <p class="notice">이 링크는 환자가 공유한 복용 이력입니다.</p>
     </div>
 
     <script>
-        // 서버에서 약 데이터를 JS로 넘기기
         const drugsData = {{ drugs | tojson }};
         const todayStr = new Date().toISOString().split('T')[0];
+        const dayLabels = ['일','월','화','수','목','금','토'];
+        const colors = ['#7C6FF0','#2E86DE','#1D9E75','#D85A30','#D4537E','#BA7517','#639922','#E24B4A'];
 
-        drugsData.forEach(drug => {
-            if (!drug.logs || !drug.logs.length) return;
+        // 약별 색상 매핑 + 레전드
+        const drugColorMap = {};
+        const legendList = document.getElementById('legendList');
+        drugsData.forEach((drug, i) => {
+            const color = colors[i % colors.length];
+            drugColorMap[drug.id] = color;
+            // 복용기간: 진료일 기준으로 계산
+const visitDate = '{{ visit_date }}';
+const endD = new Date(visitDate);
+endD.setDate(endD.getDate() + drug.days);
+const endStr = endD.toISOString().split('T')[0];
 
-            // 로그를 날짜 → is_taken 맵으로 변환
-            const logMap = {};
-            drug.logs.forEach(log => { logMap[log.taken_date] = log.is_taken; });
+legendList.innerHTML += `
+    <div class="drug-legend-item">
+        <div class="drug-legend-dot" style="background:${color};"></div>
+        <div>
+            <div>${drug.drug_name}</div>
+            <div class="drug-legend-sub">${drug.dosage} · ${drug.frequency} · ${drug.days}일</div>
+            <div class="drug-legend-sub" style="color:#2E86DE;">📅 ${visitDate} ~ ${endStr}</div>
+        </div>
+    </div>
+`;
+        });
 
-            // 날짜 범위 — 최근 3개월만 표시 (너무 길면 읽기 어려움)
-            const dates = Object.keys(logMap).sort();
-            const startDate = new Date(dates[0]);
-            const endDate = new Date(todayStr);
+        // 모든 약의 로그를 날짜 → {drugId: is_taken} 맵으로
+        const dateMap = {};
+let minDate = null, maxDate = null;
+const freqMap = {'하루 1회':1, '하루 2회':2, '하루 3회':3, '하루 4회':4};
 
-            // 월별로 묶기
-            const months = {};
-            let cur = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
-            while (cur <= endDate) {
-                const key = `${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}`;
-                months[key] = { year: cur.getFullYear(), month: cur.getMonth() };
-                cur.setMonth(cur.getMonth() + 1);
+drugsData.forEach(drug => {
+    if (!drug.logs) return;
+    const requiredSlots = freqMap[drug.frequency] || 1;
+
+    // 날짜별로 그룹핑
+    const byDate = {};
+    drug.logs.forEach(log => {
+        if (!byDate[log.taken_date]) byDate[log.taken_date] = { taken: 0, total: 0 };
+        byDate[log.taken_date].total++;
+        if (log.is_taken) byDate[log.taken_date].taken++;
+        const d = new Date(log.taken_date);
+        if (!minDate || d < minDate) minDate = d;
+        if (!maxDate || d > maxDate) maxDate = d;
+    });
+
+    // 날짜별로 모든 슬롯 완료 여부 판단
+    Object.entries(byDate).forEach(([date, counts]) => {
+        if (!dateMap[date]) dateMap[date] = {};
+        // 필요한 횟수만큼 다 먹었으면 1, 하나라도 먹었으면 0.5, 아예 안 먹었으면 0
+        if (counts.taken >= requiredSlots) {
+            dateMap[date][drug.id] = 1;  // 완료
+        } else if (counts.taken > 0) {
+            dateMap[date][drug.id] = 0.5;  // 일부 복용
+        } else {
+            dateMap[date][drug.id] = 0;  // 미복용
+        }
+    });
+});
+
+        if (!minDate) minDate = new Date();
+        const today = new Date(todayStr);
+        if (today > maxDate) maxDate = today;
+
+        // 월별 캘린더 생성
+        const container = document.getElementById('calendarContainer');
+        let cur = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+
+        while (cur <= maxDate) {
+            const year = cur.getFullYear();
+            const month = cur.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDay = new Date(year, month, 1).getDay();
+
+            const section = document.createElement('div');
+            section.className = 'month-section';
+
+            const label = document.createElement('div');
+            label.className = 'month-label';
+            label.textContent = `${year}년 ${month + 1}월`;
+            section.appendChild(label);
+
+            const grid = document.createElement('div');
+            grid.className = 'cal-grid';
+
+            dayLabels.forEach(d => {
+                const lbl = document.createElement('div');
+                lbl.className = 'cal-day-label';
+                lbl.textContent = d;
+                grid.appendChild(lbl);
+            });
+
+            for (let i = 0; i < firstDay; i++) {
+                const blank = document.createElement('div');
+                blank.className = 'cal-cell empty';
+                grid.appendChild(blank);
             }
 
-            const container = document.getElementById(`calendar-${drug.id}`);
-            if (!container) return;
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const cell = document.createElement('div');
+                cell.className = 'cal-cell';
+                if (dateStr === todayStr) cell.classList.add('today');
 
-            const days = ['일', '월', '화', '수', '목', '금', '토'];
+                const dateLabel = document.createElement('div');
+                dateLabel.className = 'cal-date';
+                dateLabel.textContent = d;
+                cell.appendChild(dateLabel);
 
-            Object.entries(months).forEach(([key, { year, month }]) => {
-                const monthDiv = document.createElement('div');
-                monthDiv.className = 'calendar-month';
+                const bars = document.createElement('div');
+                bars.className = 'cal-bars';
 
-                const title = document.createElement('div');
-                title.className = 'calendar-month-title';
-                title.textContent = `${year}년 ${month + 1}월`;
-                monthDiv.appendChild(title);
+                drugsData.forEach(drug => {
+                    const bar = document.createElement('div');
+                    bar.className = 'cal-bar';
+                    const color = drugColorMap[drug.id];
+                    bar.title = drug.drug_name;
 
-                const grid = document.createElement('div');
-                grid.className = 'calendar-grid';
-
-                // 요일 라벨
-                days.forEach(d => {
-                    const label = document.createElement('div');
-                    label.className = 'calendar-day-label';
-                    label.textContent = d;
-                    grid.appendChild(label);
+                   if (dateMap[dateStr] && drug.id in dateMap[dateStr] && dateMap[dateStr][drug.id] === 1) {
+    bar.style.background = color;
+} else if (dateMap[dateStr] && drug.id in dateMap[dateStr] && dateMap[dateStr][drug.id] === 0.5) {
+    bar.style.background = color;
+    bar.style.opacity = '0.5';
+} else {
+    bar.style.background = '#E8E8E8';
+}
+                    bars.appendChild(bar);
                 });
 
-                // 첫날 요일 공백
-                const firstDay = new Date(year, month, 1).getDay();
-                for (let i = 0; i < firstDay; i++) {
-                    const blank = document.createElement('div');
-                    blank.className = 'calendar-cell empty';
-                    grid.appendChild(blank);
-                }
+                cell.appendChild(bars);
+                grid.appendChild(cell);
+            }
 
-                // 날짜 채우기
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-                for (let d = 1; d <= daysInMonth; d++) {
-                    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                    const cell = document.createElement('div');
-                    cell.className = 'calendar-cell';
-
-                    if (dateStr in logMap) {
-                        cell.classList.add(logMap[dateStr] ? 'taken' : 'missed');
-                        cell.textContent = d;
-                    } else {
-                        cell.classList.add('no-record');
-                        cell.textContent = d;
-                    }
-
-                    if (dateStr === todayStr) cell.classList.add('today');
-                    grid.appendChild(cell);
-                }
-
-                monthDiv.appendChild(grid);
-                container.appendChild(monthDiv);
-            });
-        });
+            section.appendChild(grid);
+            container.appendChild(section);
+            cur.setMonth(cur.getMonth() + 1);
+        }
     </script>
 </body>
 </html>
