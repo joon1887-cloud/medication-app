@@ -441,7 +441,7 @@ def get_weekly():
 """, (day_str,)).fetchone()[0]
         result.append({
             "date": day_str,
-            "weekday": ["일", "월", "화", "수", "목", "금", "토"][day.weekday() % 7 if day.weekday() != 6 else 0],
+            "weekday": ["일", "월", "화", "수", "목", "금", "토"][(day.weekday() + 1) % 7],
             "total": total,
             "taken": taken,
             "rate": round(taken / total * 100) if total > 0 else 0
