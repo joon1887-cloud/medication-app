@@ -3,25 +3,21 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import secrets
 from database import get_db, init_db
 import requests
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
+import re
 
 DRUG_API_KEY = "bd7deeffc64e3900eacf5d3ce065ae9fc77345e59fdd29e54692c29e8ef2713e"
 
 app = FastAPI()
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# ── 약 캐시 ──────────────────────────────────────────────
-_drug_cache: dict = {}  # { drug_name: { "ingredient": "...", "efficacy": "...", "usage": "..." } }
+_drug_cache: dict = {}
 
 def fetch_drug_detail(name: str) -> dict:
-    """단일 약 이름으로 API 호출 → 상세 정보 반환 (캐시에도 저장)"""
     if name in _drug_cache:
         return _drug_cache[name]
     try:
@@ -37,7 +33,6 @@ def fetch_drug_detail(name: str) -> dict:
         item = items[0]
         efficacy = item.get("efcyQesitm", "")
         usage = item.get("useMethodQesitm", "")
-
         ingredient = ""
         try:
             res2 = requests.get(
@@ -53,7 +48,6 @@ def fetch_drug_detail(name: str) -> dict:
                     ingredient = raw.split("성분명 : ")[1].split("|")[0].strip()
         except Exception:
             pass
-
         result = {"ingredient": ingredient, "efficacy": efficacy, "usage": usage}
         _drug_cache[name] = result
         return result
@@ -62,9 +56,12 @@ def fetch_drug_detail(name: str) -> dict:
 
 
 def preload_drug_cache():
-    """서버 시작 시 DB에 등록된 약들 미리 캐싱"""
     conn = get_db()
-    drugs = conn.execute("SELECT DISTINCT drug_name FROM prescription_drugs").fetchall()
+    cur = conn.cursor()
+    cur.execute("SELECT DISTINCT drug_name FROM prescription_drugs")
+    drugs = cur.fetchall()
+    cur.close()
+    conn.close()
     for row in drugs:
         name = row["drug_name"]
         if name and name not in _drug_cache:
@@ -73,12 +70,13 @@ def preload_drug_cache():
 
 
 def fill_missing_ingredients():
-    """ingredient 비어있는 기존 약들 자동으로 성분명 채우기"""
     conn = get_db()
-    rows = conn.execute(
-        "SELECT id, drug_name FROM prescription_drugs WHERE ingredient IS NULL OR ingredient = ''"
-    ).fetchall()
+    cur = conn.cursor()
+    cur.execute("SELECT id, drug_name FROM prescription_drugs WHERE ingredient IS NULL OR ingredient = ''")
+    rows = cur.fetchall()
     if not rows:
+        cur.close()
+        conn.close()
         print("[성분명] 채울 항목 없음")
         return
     print(f"[성분명] {len(rows)}개 약 성분명 자동 채우기 시작...")
@@ -87,22 +85,19 @@ def fill_missing_ingredients():
         detail = fetch_drug_detail(row["drug_name"])
         ingredient = detail.get("ingredient", "")
         if ingredient:
-            conn.execute(
-                "UPDATE prescription_drugs SET ingredient = ? WHERE id = ?",
-                (ingredient, row["id"])
-            )
+            cur.execute("UPDATE prescription_drugs SET ingredient = %s WHERE id = %s", (ingredient, row["id"]))
             updated += 1
     conn.commit()
+    cur.close()
+    conn.close()
     print(f"[성분명] {updated}개 업데이트 완료")
 
 
-# ── 앱 시작 ──────────────────────────────────────────────
 init_db()
 preload_drug_cache()
 fill_missing_ingredients()
 
 
-# ── 모델 ─────────────────────────────────────────────────
 class Drug(BaseModel):
     drug_name: str
     ingredient: str = ""
@@ -119,100 +114,108 @@ class AddPrescription(BaseModel):
     drugs: List[Drug]
 
 
-# ── 라우트 ────────────────────────────────────────────────
 @app.get("/")
 def home(request: Request):
     conn = get_db()
-    prescriptions = conn.execute("SELECT * FROM prescriptions").fetchall()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM prescriptions")
+    prescriptions = cur.fetchall()
     result = []
     for p in prescriptions:
-        drugs = conn.execute(
-            "SELECT * FROM prescription_drugs WHERE prescription_id = ?", (p["id"],)
-        ).fetchall()
+        cur.execute("SELECT * FROM prescription_drugs WHERE prescription_id = %s", (p["id"],))
+        drugs = cur.fetchall()
         result.append({
             "id": p["id"],
             "hospital": p["hospital"],
             "visit_date": p["visit_date"],
             "drugs": [dict(drug) for drug in drugs]
         })
+    cur.close()
+    conn.close()
     return templates.TemplateResponse(request, "index.html", {"prescriptions": result})
 
 
 @app.post("/add")
 def add_prescription(data: AddPrescription):
     conn = get_db()
-    cursor = conn.execute(
-        "INSERT INTO prescriptions (hospital, visit_date) VALUES (?, ?)",
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO prescriptions (hospital, visit_date) VALUES (%s, %s) RETURNING id",
         (data.hospital, data.visit_date)
     )
-    prescription_id = cursor.lastrowid
+    prescription_id = cur.fetchone()["id"]
     for drug in data.drugs:
-        # 성분명 없으면 캐시/API에서 자동 채우기
         ingredient = drug.ingredient
         if not ingredient:
             detail = fetch_drug_detail(drug.drug_name)
             ingredient = detail.get("ingredient", "")
-        conn.execute(
-            "INSERT INTO prescription_drugs (prescription_id, drug_name, ingredient, days, dosage, frequency, times, meal_timing, refill_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        cur.execute(
+            "INSERT INTO prescription_drugs (prescription_id, drug_name, ingredient, days, dosage, frequency, times, meal_timing, refill_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
             (prescription_id, drug.drug_name, ingredient, drug.days, drug.dosage, drug.frequency, drug.times, drug.meal_timing, drug.refill_date)
         )
     conn.commit()
+    cur.close()
+    conn.close()
     return {"ok": True}
 
 
 @app.delete("/delete/{prescription_id}")
 def delete_prescription(prescription_id: int):
     conn = get_db()
-    drug_ids = [row["id"] for row in conn.execute(
-        "SELECT id FROM prescription_drugs WHERE prescription_id = ?", (prescription_id,)
-    ).fetchall()]
+    cur = conn.cursor()
+    cur.execute("SELECT id FROM prescription_drugs WHERE prescription_id = %s", (prescription_id,))
+    drug_ids = [row["id"] for row in cur.fetchall()]
     for drug_id in drug_ids:
-        conn.execute("DELETE FROM medication_logs WHERE drug_id = ?", (drug_id,))
-    conn.execute("DELETE FROM prescription_drugs WHERE prescription_id = ?", (prescription_id,))
-    conn.execute("DELETE FROM prescriptions WHERE id = ?", (prescription_id,))
+        cur.execute("DELETE FROM medication_logs WHERE drug_id = %s", (drug_id,))
+    cur.execute("DELETE FROM prescription_drugs WHERE prescription_id = %s", (prescription_id,))
+    cur.execute("DELETE FROM prescriptions WHERE id = %s", (prescription_id,))
     conn.commit()
+    cur.close()
+    conn.close()
     return {"ok": True}
 
 
 @app.put("/update/{prescription_id}")
 def update_prescription(prescription_id: int, data: AddPrescription):
     conn = get_db()
-    conn.execute(
-        "UPDATE prescriptions SET hospital = ?, visit_date = ? WHERE id = ?",
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE prescriptions SET hospital = %s, visit_date = %s WHERE id = %s",
         (data.hospital, data.visit_date, prescription_id)
     )
-    drug_ids = [row["id"] for row in conn.execute(
-        "SELECT id FROM prescription_drugs WHERE prescription_id = ?", (prescription_id,)
-    ).fetchall()]
+    cur.execute("SELECT id FROM prescription_drugs WHERE prescription_id = %s", (prescription_id,))
+    drug_ids = [row["id"] for row in cur.fetchall()]
     for drug_id in drug_ids:
-        conn.execute("DELETE FROM medication_logs WHERE drug_id = ?", (drug_id,))
-    conn.execute("DELETE FROM prescription_drugs WHERE prescription_id = ?", (prescription_id,))
+        cur.execute("DELETE FROM medication_logs WHERE drug_id = %s", (drug_id,))
+    cur.execute("DELETE FROM prescription_drugs WHERE prescription_id = %s", (prescription_id,))
     for drug in data.drugs:
         ingredient = drug.ingredient
         if not ingredient:
             detail = fetch_drug_detail(drug.drug_name)
             ingredient = detail.get("ingredient", "")
-        conn.execute(
-            "INSERT INTO prescription_drugs (prescription_id, drug_name, ingredient, days, dosage, frequency, times, meal_timing, refill_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        cur.execute(
+            "INSERT INTO prescription_drugs (prescription_id, drug_name, ingredient, days, dosage, frequency, times, meal_timing, refill_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
             (prescription_id, drug.drug_name, ingredient, drug.days, drug.dosage, drug.frequency, drug.times, drug.meal_timing, drug.refill_date)
         )
     conn.commit()
+    cur.close()
+    conn.close()
     return {"ok": True}
 
 
 @app.get("/today")
 def get_today_drugs():
     conn = get_db()
+    cur = conn.cursor()
     today = date.today().isoformat()
-
-    drugs = conn.execute("""
+    cur.execute("""
         SELECT pd.*, p.hospital
         FROM prescription_drugs pd
         JOIN prescriptions p ON pd.prescription_id = p.id
-    """).fetchall()
+    """)
+    drugs = cur.fetchall()
 
     def parse_slots(times_str, frequency):
-        """사용자가 선택한 시간대만 슬롯으로 사용"""
         times_list = [t.strip() for t in times_str.split('·') if t.strip()]
         if not times_list:
             times_list = ['아침']
@@ -222,74 +225,85 @@ def get_today_drugs():
     for drug in drugs:
         drug_dict = dict(drug)
         slots = parse_slots(drug_dict['times'], drug_dict['frequency'])
-
         for slot in slots:
-            log = conn.execute(
-                "SELECT * FROM medication_logs WHERE drug_id = ? AND taken_date = ? AND time_slot = ?",
+            cur.execute(
+                "SELECT * FROM medication_logs WHERE drug_id = %s AND taken_date = %s AND time_slot = %s",
                 (drug_dict['id'], today, slot)
-            ).fetchone()
+            )
+            log = cur.fetchone()
             result.append({
                 **drug_dict,
                 'slot': slot,
                 'is_taken': log['is_taken'] if log else 0,
                 'log_id': log['id'] if log else None,
             })
-
+    cur.close()
+    conn.close()
     return result
 
 
 @app.post("/check/{drug_id}")
 def toggle_check(drug_id: int, slot: str = ""):
     conn = get_db()
+    cur = conn.cursor()
     today = date.today().isoformat()
-    existing = conn.execute(
-        "SELECT * FROM medication_logs WHERE drug_id = ? AND taken_date = ? AND time_slot = ?",
+    cur.execute(
+        "SELECT * FROM medication_logs WHERE drug_id = %s AND taken_date = %s AND time_slot = %s",
         (drug_id, today, slot)
-    ).fetchone()
+    )
+    existing = cur.fetchone()
     if existing:
         new_status = 0 if existing["is_taken"] else 1
-        conn.execute(
-            "UPDATE medication_logs SET is_taken = ? WHERE id = ?",
-            (new_status, existing["id"])
-        )
+        cur.execute("UPDATE medication_logs SET is_taken = %s WHERE id = %s", (new_status, existing["id"]))
     else:
-        conn.execute(
-            "INSERT INTO medication_logs (drug_id, taken_date, time_slot, is_taken) VALUES (?, ?, ?, 1)",
+        cur.execute(
+            "INSERT INTO medication_logs (drug_id, taken_date, time_slot, is_taken) VALUES (%s, %s, %s, 1)",
             (drug_id, today, slot)
         )
     conn.commit()
+    cur.close()
+    conn.close()
     return {"ok": True}
+
 
 @app.post("/share/{prescription_id}")
 def create_share_link(prescription_id: int):
     conn = get_db()
+    cur = conn.cursor()
     token = secrets.token_urlsafe(8)
-    conn.execute(
-        "INSERT INTO share_links (token, prescription_id, created_at) VALUES (?, ?, ?)",
+    cur.execute(
+        "INSERT INTO share_links (token, prescription_id, created_at) VALUES (%s, %s, %s)",
         (token, prescription_id, datetime.now().isoformat())
     )
     conn.commit()
+    cur.close()
+    conn.close()
     return {"token": token}
 
 
 @app.get("/shared/{token}")
 def view_shared(token: str, request: Request):
     conn = get_db()
-    link = conn.execute("SELECT * FROM share_links WHERE token = ?", (token,)).fetchone()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM share_links WHERE token = %s", (token,))
+    link = cur.fetchone()
     if not link:
         return {"error": "유효하지 않은 링크입니다"}
-    prescription = conn.execute("SELECT * FROM prescriptions WHERE id = ?", (link["prescription_id"],)).fetchone()
-    drugs = conn.execute("SELECT * FROM prescription_drugs WHERE prescription_id = ?", (link["prescription_id"],)).fetchall()
+    cur.execute("SELECT * FROM prescriptions WHERE id = %s", (link["prescription_id"],))
+    prescription = cur.fetchone()
+    cur.execute("SELECT * FROM prescription_drugs WHERE prescription_id = %s", (link["prescription_id"],))
+    drugs = cur.fetchall()
     drugs_with_logs = []
     for drug in drugs:
-        logs = conn.execute(
-            "SELECT * FROM medication_logs WHERE drug_id = ? ORDER BY taken_date DESC", (drug["id"],)
-        ).fetchall()
+        cur.execute("SELECT * FROM medication_logs WHERE drug_id = %s ORDER BY taken_date DESC", (drug["id"],))
+        logs = cur.fetchall()
         drug_dict = dict(drug)
         drug_dict["logs"] = [dict(log) for log in logs]
         drug_dict["taken_count"] = sum(1 for log in logs if log["is_taken"])
         drug_dict["total_logs"] = len(logs)
         drugs_with_logs.append(drug_dict)
+    cur.close()
+    conn.close()
     return templates.TemplateResponse(request, "shared.html", {
         "hospital": prescription["hospital"],
         "visit_date": prescription["visit_date"],
@@ -299,10 +313,6 @@ def view_shared(token: str, request: Request):
 
 @app.get("/search-drug")
 def search_drug(name: str, detail: bool = False):
-    """
-    detail=False : 약 이름 목록만 (자동완성용, 빠름)
-    detail=True  : 성분명 + 효능 + 복용법까지 (약 선택 후 호출)
-    """
     results = []
     try:
         res = requests.get(
@@ -317,9 +327,7 @@ def search_drug(name: str, detail: bool = False):
             efficacy = item.get("efcyQesitm", "") if detail else ""
             usage = item.get("useMethodQesitm", "") if detail else ""
             ingredient = ""
-
             if detail:
-                # 캐시에 있으면 바로 사용
                 if drug_name in _drug_cache:
                     cached = _drug_cache[drug_name]
                     ingredient = cached.get("ingredient", "")
@@ -340,27 +348,15 @@ def search_drug(name: str, detail: bool = False):
                                 ingredient = raw.split("성분명 : ")[1].split("|")[0].strip()
                     except Exception:
                         pass
-                    # 캐시에 저장
                     _drug_cache[drug_name] = {"ingredient": ingredient, "efficacy": efficacy, "usage": usage}
-
-            results.append({
-                "name": drug_name,
-                "efficacy": efficacy,
-                "usage": usage,
-                "ingredient": ingredient
-            })
+            results.append({"name": drug_name, "efficacy": efficacy, "usage": usage, "ingredient": ingredient})
     except Exception:
         pass
-
-    return results  # ← 기존 코드에서 빠져있던 return!
+    return results
 
 
 @app.get("/drug-info")
 def drug_info(name: str):
-    """
-    검색 페이지용 상세 정보 API
-    e약은요 + 제품허가정보 통합 반환
-    """
     results = []
     try:
         res = requests.get(
@@ -373,12 +369,10 @@ def drug_info(name: str):
         for item in items:
             drug_name = item.get("itemName", "")
             ingredient = ""
-            caution = item.get("atpnQesitm", "")          # 주의사항
-            side_effect = item.get("seQesitm", "")         # 부작용
-            interaction = item.get("intrcQesitm", "")      # 상호작용
-            storage = item.get("depositMethodQesitm", "")  # 보관법
-
-            # 캐시 or API로 성분명 가져오기
+            caution = item.get("atpnQesitm", "")
+            side_effect = item.get("seQesitm", "")
+            interaction = item.get("intrcQesitm", "")
+            storage = item.get("depositMethodQesitm", "")
             if drug_name in _drug_cache:
                 ingredient = _drug_cache[drug_name].get("ingredient", "")
                 efficacy = _drug_cache[drug_name].get("efficacy", item.get("efcyQesitm", ""))
@@ -401,44 +395,31 @@ def drug_info(name: str):
                 except Exception:
                     pass
                 _drug_cache[drug_name] = {"ingredient": ingredient, "efficacy": efficacy, "usage": usage}
-
             results.append({
-                "name": drug_name,
-                "ingredient": ingredient,
-                "efficacy": efficacy,
-                "usage": usage,
-                "caution": caution,
-                "side_effect": side_effect,
-                "interaction": interaction,
-                "storage": storage,
+                "name": drug_name, "ingredient": ingredient, "efficacy": efficacy,
+                "usage": usage, "caution": caution, "side_effect": side_effect,
+                "interaction": interaction, "storage": storage,
             })
     except Exception:
         pass
     return results
 
 
-@app.get("/search-page")
-def search_page(request: Request):
-    return templates.TemplateResponse(request, "search.html", {})
-
-
 @app.get("/weekly")
 def get_weekly():
     conn = get_db()
-    from datetime import timedelta
+    cur = conn.cursor()
     today = date.today()
     result = []
     for i in range(6, -1, -1):
         day = today - timedelta(days=i)
         day_str = day.isoformat()
-        # 슬롯 기준 total 계산 (frequency 합산)
-        drugs = conn.execute("SELECT frequency FROM prescription_drugs").fetchall()
+        cur.execute("SELECT frequency FROM prescription_drugs")
+        drugs = cur.fetchall()
         freq_map = {'하루 1회': 1, '하루 2회': 2, '하루 3회': 3, '하루 4회': 4}
-        total = sum(freq_map.get(d['frequency'], 1) for d in drugs)        
-        taken = conn.execute("""
-    SELECT COUNT(*) FROM medication_logs 
-    WHERE taken_date = ? AND is_taken = 1
-""", (day_str,)).fetchone()[0]
+        total = sum(freq_map.get(d['frequency'], 1) for d in drugs)
+        cur.execute("SELECT COUNT(*) as cnt FROM medication_logs WHERE taken_date = %s AND is_taken = 1", (day_str,))
+        taken = cur.fetchone()["cnt"]
         result.append({
             "date": day_str,
             "weekday": ["일", "월", "화", "수", "목", "금", "토"][(day.weekday() + 1) % 7],
@@ -446,7 +427,11 @@ def get_weekly():
             "taken": taken,
             "rate": round(taken / total * 100) if total > 0 else 0
         })
+    cur.close()
+    conn.close()
     return result
+
+
 @app.get("/drug-expert")
 def drug_expert(name: str):
     try:
@@ -460,8 +445,6 @@ def drug_expert(name: str):
         if not items:
             return {}
         item = items[0]
-
-        import re
 
         def extract_text(doc):
             if not doc:
@@ -490,7 +473,6 @@ def drug_expert(name: str):
         ee = item.get("EE_DOC_DATA", "") or ""
         ud = item.get("UD_DOC_DATA", "") or ""
         nb = item.get("NB_DOC_DATA", "") or ""
-
         material = item.get("MATERIAL_NAME", "")
         ingredient = ""
         if "성분명 : " in material:
